@@ -1,9 +1,0 @@
-output "storage_account_id" {
-  description = "O ID do Azure Storage Account criado."
-  value       = azurerm_storage_account.sa_{{ resource_name }}.id
-}
-
-output "storage_account_primary_blob_endpoint" {
-  description = "O endpoint primário do Blob Storage."
-  value       = azurerm_storage_account.sa_{{ resource_name }}.primary_blob_endpoint
-}

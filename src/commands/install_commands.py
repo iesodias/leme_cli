@@ -5,7 +5,6 @@ from rich import print
 from typing import Optional
 
 from ..system.docker_installer import DockerInstaller
-from ..config.validation import ValidationError
 
 
 def install_docker(
@@ -57,9 +56,6 @@ def install_docker(
         else:
             raise typer.Exit(code=1)
             
-    except ValidationError as e:
-        print(f":x: [bold red]Erro:[/bold red] {e}")
-        raise typer.Exit(code=1)
     except Exception as e:
         print(f":x: [bold red]Erro inesperado:[/bold red] {e}")
         raise typer.Exit(code=1)
@@ -84,9 +80,6 @@ def uninstall_docker() -> None:
         else:
             raise typer.Exit(code=1)
             
-    except ValidationError as e:
-        print(f":x: [bold red]Erro:[/bold red] {e}")
-        raise typer.Exit(code=1)
     except Exception as e:
         print(f":x: [bold red]Erro inesperado:[/bold red] {e}")
         raise typer.Exit(code=1)

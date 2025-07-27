@@ -2,19 +2,14 @@
 
 import typer
 from rich import print
-from pathlib import Path
 from typing import Optional
 
-from src.config.constants import TerraformAction
-from src.commands.new_commands import create_project, create_module, create_resource
-from src.commands.delete_commands import delete_project
-from src.commands.terraform_commands import run_terraform_command
 from src.commands.install_commands import install_docker, uninstall_docker, check_docker_status, system_info
 from src.commands.environment_commands import setup_environment, environment_status
 
 # --- Configuração da Aplicação ---
 app = typer.Typer(
-    help="CLI para gerar, gerenciar e executar projetos e recursos de IaC com Terraform.",
+    help="CLI para configuração automática de ambiente DevOps.",
     add_completion=False,
     add_help_option=False
 )
@@ -46,74 +41,10 @@ def main(
         raise typer.Exit()
 
 
-# Cria sub-apps para agrupar comandos
-new_app = typer.Typer(help="Cria um novo projeto, módulo ou recurso.")
-app.add_typer(new_app, name="new")
-
 install_app = typer.Typer(help="Instala ferramentas necessárias (Docker, etc).")
 app.add_typer(install_app, name="install")
 
 # --- Comandos da CLI ---
-
-@new_app.command("project")
-def new_project(
-    name: str = typer.Option(..., "--name", "-n", help="O nome do projeto."),
-    provider: str = typer.Option(..., "--provider", "-p", help="O provedor de nuvem: 'aws' ou 'azure'."),
-    path: str = typer.Option(".", "--path", help="Diretório onde criar o projeto (padrão: diretório atual).")
-):
-    """
-    Cria a estrutura de um novo projeto Terraform para um provedor específico.
-    """
-    create_project(name, provider, path)
-
-
-@new_app.command("module")
-def new_module(
-    name: str = typer.Option(..., "--name", "-n", help="O nome do módulo."),
-    path: str = typer.Option(".", "--path", help="Diretório onde criar o módulo (padrão: diretório atual).")
-):
-    """Cria a estrutura de um novo módulo Terraform reutilizável."""
-    create_module(name, path)
-
-
-@new_app.command("resource")
-def new_resource(
-    resource_type: str = typer.Option(..., "--type", "-t", help="Tipo do recurso a ser criado (ex: storage-account, virtual_machine)."),
-    provider: str = typer.Option(..., "--provider", "-p", help="O provedor de nuvem: 'aws' ou 'azure'."),
-    name: str = typer.Option(..., "--name", "-n", help="O nome para o módulo do recurso (será o nome da pasta)."),
-    path: str = typer.Option(".", "--path", help="Diretório onde criar o recurso (padrão: diretório atual).")
-):
-    """Cria um módulo Terraform para um recurso específico."""
-    create_resource(resource_type, provider, name, path)
-
-
-@app.command("delete")
-def delete_project_command(
-    project_path: Path = typer.Argument(
-        ...,
-        help="O caminho para o diretório do projeto que será apagado.",
-        exists=True, file_okay=False, dir_okay=True, resolve_path=True,
-    ),
-    force: bool = typer.Option(
-        False, "--force", "-f",
-        help="Forçar a exclusão sem pedir confirmação. USE COM CUIDADO!",
-    )
-):
-    """Apaga um diretório de projeto e todo o seu conteúdo de forma permanente."""
-    delete_project(project_path, force)
-
-
-@app.command("run")
-def run_terraform(
-    action: TerraformAction = typer.Argument(..., help="Comando do Terraform a ser executado."),
-    project_path: Path = typer.Argument(
-        ...,
-        help="Caminho para o projeto Terraform.",
-        exists=True, file_okay=False, dir_okay=True, resolve_path=True,
-    )
-):
-    """Executa um comando Terraform dentro do diretório de um projeto."""
-    run_terraform_command(action, project_path)
 
 
 # --- Comandos de Instalação ---

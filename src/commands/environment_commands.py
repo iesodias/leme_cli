@@ -6,7 +6,6 @@ from typing import Optional, List
 
 from ..system.environment_manager import EnvironmentManager
 from ..system.docker_installer import DockerInstaller
-from ..system.installers.terraform_installer import TerraformInstaller
 from ..system.installers.git_installer import GitInstaller
 from ..config.constants import Tool, DEVOPS_TOOLS_CONFIG
 
@@ -16,7 +15,7 @@ def setup_environment(
     required_only: bool = typer.Option(False, "--required-only", help="Instalar apenas ferramentas obrigatórias"),
     skip_docker: bool = typer.Option(False, "--skip-docker", help="Pular instalação do Docker"),
     force: bool = typer.Option(False, "--force", "-f", help="Forçar reinstalação de ferramentas"),
-    tools: Optional[List[str]] = typer.Option(None, "--tools", "-t", help="Instalar apenas ferramentas específicas (ex: terraform,git)")
+    tools: Optional[List[str]] = typer.Option(None, "--tools", "-t", help="Instalar apenas ferramentas específicas (ex: git,docker)")
 ) -> None:
     """
     Configura o ambiente DevOps completo para o curso.
@@ -24,7 +23,6 @@ def setup_environment(
     Este comando verifica e instala todas as ferramentas necessárias:
     - Docker (obrigatório)
     - Git (obrigatório) 
-    - Terraform (obrigatório)
     - Azure CLI (opcional)
     - AWS CLI v2 (opcional)
     - kubectl (opcional)
@@ -163,8 +161,6 @@ def _install_tool(tool: Tool, system_info, force: bool = False) -> bool:
         elif tool == Tool.GIT:
             return _install_git(system_info)
         
-        elif tool == Tool.TERRAFORM:
-            return _install_terraform(system_info)
         
         elif tool == Tool.AZURE_CLI:
             return _install_azure_cli(system_info)
@@ -200,14 +196,6 @@ def _install_git(system_info) -> bool:
         return False
 
 
-def _install_terraform(system_info) -> bool:
-    """Instala Terraform baseado no sistema operacional."""
-    try:
-        terraform_installer = TerraformInstaller(system_info)
-        return terraform_installer.install()
-    except Exception as e:
-        print(f":x: [red]Erro durante instalação do Terraform: {str(e)}[/red]")
-        return False
 
 
 def _install_azure_cli(system_info) -> bool:

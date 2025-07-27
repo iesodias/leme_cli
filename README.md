@@ -1,13 +1,12 @@
 # CLI Leme - Configuração Automática de Ambiente DevOps
 
-Ferramenta para configurar automaticamente seu ambiente de desenvolvimento DevOps com todas as ferramentas necessárias para o curso.
+Ferramenta para configurar automaticamente seu ambiente de desenvolvimento DevOps com Docker, Git e outras ferramentas essenciais para o curso.
 
 ## O que esta CLI faz
 
 A CLI Leme instala e configura automaticamente:
 - **Docker** - Para containerização
 - **Git** - Para controle de versão  
-- **Terraform** - Para Infrastructure as Code
 - **Outras ferramentas** - Azure CLI, AWS CLI v2, kubectl, Ansible (opcionais)
 
 ## Instalação e Uso
@@ -63,11 +62,11 @@ python3 main.py setup-environment
 # Instalar todas as ferramentas automaticamente
 python3 main.py setup-environment
 
-# Instalar apenas ferramentas obrigatórias (Docker, Git, Terraform)
+# Instalar apenas ferramentas obrigatórias (Docker, Git)
 python3 main.py setup-environment --required-only
 
 # Instalar ferramentas específicas
-python3 main.py setup-environment --tools git,terraform,docker
+python3 main.py setup-environment --tools git,docker
 
 # Forçar instalação sem perguntas
 python3 main.py setup-environment --force
@@ -82,22 +81,6 @@ python3 main.py environment-status
 python3 main.py system-info
 ```
 
-### Trabalhar com projetos Terraform
-```bash
-# Criar um novo projeto Azure
-python3 main.py new project --name meu-projeto --provider azure
-
-# Criar um projeto AWS
-python3 main.py new project --name meu-projeto --provider aws
-
-# Criar projeto em diretório específico
-python3 main.py new project --name meu-projeto --provider azure --path /home/usuario/projetos
-
-# Executar comandos Terraform
-python3 main.py run init meu-projeto
-python3 main.py run plan meu-projeto
-python3 main.py run apply meu-projeto
-```
 
 ## Teste Seguro (Recomendado)
 
@@ -111,7 +94,7 @@ docker build -f Dockerfile.test -t leme-test .
 docker run --rm leme-test python3 /app/main.py environment-status
 
 # 3. Testar instalação
-docker run --rm leme-test python3 /app/main.py setup-environment --tools git,terraform --force
+docker run --rm leme-test python3 /app/main.py setup-environment --tools git,docker --force
 ```
 
 ## Solução de Problemas
@@ -181,14 +164,6 @@ groups | grep docker
 docker run hello-world
 ```
 
-### Terraform não encontrado
-```bash
-# Verificar instalação
-terraform --version
-
-# Se não estiver instalado, executar novamente
-python3 main.py setup-environment --tools terraform --force
-```
 
 ## Sistemas Suportados
 
@@ -201,29 +176,6 @@ python3 main.py setup-environment --tools terraform --force
 | CentOS/RHEL | Funcional | yum/dnf + repositórios oficiais |
 | Fedora | Funcional | dnf + repositórios oficiais |
 
-## Estrutura dos Projetos Criados
-
-### Projeto Azure
-```
-meu-projeto/
-├── main.tf          # Configuração principal
-├── variables.tf     # Variáveis do projeto
-├── outputs.tf       # Saídas do projeto
-├── providers.tf     # Configuração do Azure
-├── backend.tf       # Backend remoto
-└── .gitignore       # Arquivos ignorados
-```
-
-### Projeto AWS
-```
-meu-projeto/
-├── main.tf          # Configuração principal
-├── variables.tf     # Variáveis do projeto
-├── outputs.tf       # Saídas do projeto
-├── providers.tf     # Configuração da AWS
-├── backend.tf       # Backend S3
-└── .gitignore       # Arquivos ignorados
-```
 
 ## Workflow Recomendado
 
@@ -236,29 +188,13 @@ python3 main.py setup-environment
 python3 main.py environment-status
 ```
 
-### 2. Criar seu primeiro projeto
+### 2. Usar as ferramentas instaladas
 ```bash
-# Azure
-python3 main.py new project --name meu-primeiro-projeto --provider azure
-
-# AWS
-python3 main.py new project --name meu-primeiro-projeto --provider aws
-
-# Em diretório específico
-python3 main.py new project --name meu-primeiro-projeto --provider azure --path ~/projetos
-```
-
-### 3. Trabalhar com Terraform
-```bash
-cd meu-primeiro-projeto
-python3 ../main.py run init .
-python3 ../main.py run validate .
-python3 ../main.py run plan .
-```
-
-### 4. Aplicar mudanças (quando estiver pronto)
-```bash
-python3 ../main.py run apply .
+# Verificar versões das ferramentas
+docker --version
+git --version
+aws --version
+az --version
 ```
 
 ## Comandos de Ajuda
@@ -269,8 +205,7 @@ python3 main.py --help
 
 # Ajuda para comandos específicos
 python3 main.py setup-environment --help
-python3 main.py new --help
-python3 main.py run --help
+python3 main.py install --help
 ```
 
 ## Resumo dos Comandos Essenciais
@@ -287,13 +222,10 @@ python3 main.py setup-environment
 # Verificar instalação
 python3 main.py environment-status
 
-# Criar projeto
-python3 main.py new project --name workshop --provider azure
-
-# Trabalhar com Terraform
-cd workshop
-python3 ../main.py run init .
-python3 ../main.py run plan .
+# Usar as ferramentas
+docker run hello-world
+git config --global user.name "Seu Nome"
+git config --global user.email "seu.email@exemplo.com"
 ```
 
 ## Suporte
