@@ -1,29 +1,29 @@
-# 🚀 CLI Leme - DevOps Environment Toolkit
+# CLI Leme - DevOps Environment Toolkit
 
 Uma CLI completa para configuração de ambiente DevOps, geração de projetos Infrastructure as Code (IaC) com Terraform, e instalação automática de ferramentas essenciais como Docker, Git, Terraform, Azure CLI, AWS CLI v2, kubectl, Ansible e watch.
 
-## 📋 Índice
+## Índice
 
-- [🎯 Setup Rápido](#-setup-rápido)
-- [🧪 Teste em Container](#-teste-em-container)
-- [🚀 Instalação](#-instalação)
-- [🌍 Ambiente DevOps](#-ambiente-devops)
-- [🎯 Comandos Principais](#-comandos-principais)
-- [🏗 Criando Projetos](#-criando-projetos)
-- [🗑 Gerenciando Recursos](#-gerenciando-recursos)
-- [⚡ Executando Terraform](#-executando-terraform)
-- [📚 Exemplos Práticos](#-exemplos-práticos)
-- [🖥 Sistemas Suportados](#-sistemas-suportados)
-- [🐛 Solução de Problemas](#-solução-de-problemas)
-- [🗑 Desinstalação](#-desinstalação)
+- [Setup Rápido](#setup-rápido)
+- [Teste em Container](#teste-em-container)
+- [Instalação](#instalação)
+- [Ambiente DevOps](#ambiente-devops)
+- [Comandos Principais](#comandos-principais)
+- [Criando Projetos](#criando-projetos)
+- [Gerenciando Recursos](#gerenciando-recursos)
+- [Executando Terraform](#executando-terraform)
+- [Exemplos Práticos](#exemplos-práticos)
+- [Sistemas Suportados](#sistemas-suportados)
+- [Solução de Problemas](#solução-de-problemas)
+- [Desinstalação](#desinstalação)
 
-## 🎯 Setup Rápido
+## Setup Rápido
 
 ### Para Estudantes/Iniciantes
 ```bash
 # 1. Clone/baixe o projeto
-git clone https://github.com/SEU_USUARIO/leme.git
-cd leme
+git clone https://github.com/iesodias/leme_cli.git
+cd leme_cli
 
 # 2. Instale dependências
 pip install rich typer jinja2
@@ -44,9 +44,9 @@ python3 main.py setup-environment --required-only --force
 python3 main.py environment-status
 ```
 
-## 🧪 Teste em Container
+## Teste em Container
 
-**🐳 Teste a CLI sem afetar seu sistema!**
+**Teste a CLI sem afetar seu sistema!**
 
 ### Método 1: Teste Rápido
 ```bash
@@ -81,30 +81,30 @@ O projeto inclui um `Dockerfile.test` que cria um ambiente Ubuntu 22.04 limpo co
 - Ferramentas básicas (curl, wget, unzip, sudo)
 
 **Perfeito para:**
-- ✅ Testar a CLI antes de instalar no seu sistema
-- ✅ Validar instaladores em Ubuntu/Debian
-- ✅ Demonstrações em aulas/workshops
-- ✅ CI/CD e testes automatizados
+- Testar a CLI antes de instalar no seu sistema
+- Validar instaladores em Ubuntu/Debian
+- Demonstrações em aulas/workshops
+- CI/CD e testes automatizados
 
-## 🚀 Instalação
+## Instalação
 
-### ⚡ Método Recomendado (Um Comando)
+### Método Recomendado (Um Comando)
 
 A CLI Leme pode ser instalada automaticamente em qualquer sistema. O script detecta seu sistema operacional, instala Python se necessário, e configura tudo automaticamente.
 
-#### 🐧 Linux / 🍎 macOS / 🪟 WSL
+#### Linux / macOS / WSL
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/SEU_USUARIO/leme/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/iesodias/leme_cli/main/install.sh | bash
 ```
 
-#### 🪟 Windows (PowerShell)
+#### Windows (PowerShell)
 
 ```powershell
-iwr -useb https://raw.githubusercontent.com/SEU_USUARIO/leme/main/install.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/iesodias/leme_cli/main/install.ps1 | iex
 ```
 
-#### 🔄 Instalação Local (Para Desenvolvimento)
+#### Instalação Local (Para Desenvolvimento)
 
 Se você baixou o projeto localmente:
 
@@ -118,7 +118,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 .\install.ps1
 ```
 
-### ✅ Verificando a Instalação
+### Verificando a Instalação
 
 Após a instalação, reinicie seu terminal e execute:
 
@@ -126,9 +126,9 @@ Após a instalação, reinicie seu terminal e execute:
 leme --help
 ```
 
-Se funcionar, você está pronto! 🎉
+Se funcionar, você está pronto!
 
-## 🛠 Instalação Manual
+## Instalação Manual
 
 Caso prefira instalar manualmente ou o script automático não funcione:
 
@@ -141,7 +141,7 @@ Caso prefira instalar manualmente ou o script automático não funcione:
 
 ```bash
 # 1. Clone ou baixe o projeto
-cd leme
+cd leme_cli
 
 # 2. Instale as dependências necessárias
 pip install typer rich jinja2
@@ -165,21 +165,21 @@ source ~/.bashrc
 echo @python "%~dp0main.py" %* > leme.bat
 ```
 
-## 🌍 Ambiente DevOps
+## Ambiente DevOps
 
-### 🚀 Setup Completo do Ambiente
+### Setup Completo do Ambiente
 
 A CLI Leme pode configurar automaticamente um ambiente DevOps completo com todas as ferramentas necessárias.
 
 #### Ferramentas Instaladas Automaticamente:
-- **Docker** 🐳 - Containerização 
-- **Git** 📊 - Controle de versão
-- **Terraform** 🏗️ - Infrastructure as Code
-- **Azure CLI** ☁️ - Interface Azure (opcional)
-- **AWS CLI v2** 🔶 - Interface AWS (opcional)  
-- **kubectl** ⎈ - Cliente Kubernetes (opcional)
-- **Ansible** ⚙️ - Automação de configuração (opcional)
-- **watch** 👁️ - Monitoramento de comandos (pré-instalado na maioria dos sistemas)
+- **Docker** - Containerização 
+- **Git** - Controle de versão
+- **Terraform** - Infrastructure as Code
+- **Azure CLI** - Interface Azure (opcional)
+- **AWS CLI v2** - Interface AWS (opcional)  
+- **kubectl** - Cliente Kubernetes (opcional)
+- **Ansible** - Automação de configuração (opcional)
+- **watch** - Monitoramento de comandos (pré-instalado na maioria dos sistemas)
 
 ### Comandos de Ambiente
 
@@ -272,13 +272,13 @@ python3 main.py environment-status
 ```
 
 Mostra:
-- ✅ Ferramentas instaladas (com versões)
-- ❌ Ferramentas em falta
-- 📊 Resumo estatístico
-- 🚨 Ferramentas obrigatórias em falta
-- 💡 Sugestões de próximos passos
+- Ferramentas instaladas (com versões)
+- Ferramentas em falta
+- Resumo estatístico
+- Ferramentas obrigatórias em falta
+- Sugestões de próximos passos
 
-## 🎯 Comandos Principais
+## Comandos Principais
 
 ### Ajuda Geral
 ```bash
@@ -294,7 +294,7 @@ python3 main.py system-info
 python3 main.py status
 ```
 
-## 🏗 Criando Projetos
+## Criando Projetos
 
 ### 1. Criar Novo Projeto
 
@@ -338,7 +338,7 @@ Durante a criação, você será solicitado a fornecer:
 python3 main.py new resource --type virtual_machine --provider azure --name minha-vm
 ```
 
-## 🗑 Gerenciando Projetos
+## Gerenciando Projetos
 
 ### Deletar Projeto
 ```bash
@@ -349,7 +349,7 @@ python3 main.py delete caminho/para/projeto
 python3 main.py delete caminho/para/projeto --force
 ```
 
-## 🐳 Instalação de Ferramentas
+## Instalação de Ferramentas
 
 ### Docker
 
@@ -379,7 +379,7 @@ python3 main.py install docker --no-test
 python3 main.py uninstall-docker
 ```
 
-## ⚡ Executando Terraform
+## Executando Terraform
 
 ### Comandos Disponíveis
 ```bash
@@ -399,7 +399,7 @@ python3 main.py run apply caminho/para/projeto
 python3 main.py run destroy caminho/para/projeto
 ```
 
-## 📚 Exemplos Práticos
+## Exemplos Práticos
 
 ### Exemplo 1: Criando um Projeto Azure Completo
 
@@ -471,33 +471,33 @@ python3 main.py run plan meu-app
 python3 main.py delete app-storage --force
 ```
 
-## 🖥 Sistemas Suportados
+## Sistemas Suportados
 
 ### Ferramentas DevOps Suportadas
 
 | Ferramenta | Ubuntu/Debian | CentOS/RHEL | Fedora | macOS | Método de Instalação |
 |------------|---------------|-------------|--------|-------|---------------------|
-| **Docker** | ✅ | ✅ | ✅ | ✅ | Repositório oficial + fallbacks |
-| **Git** | ✅ | ✅ | ✅ | ✅ | Gerenciador de pacotes |
-| **Terraform** | ✅ | ✅ | ✅ | ✅ | Repositório HashiCorp + binário |
-| **Azure CLI** | 🚧 | 🚧 | 🚧 | 🚧 | Em desenvolvimento |
-| **AWS CLI v2** | 🚧 | 🚧 | 🚧 | 🚧 | Em desenvolvimento |
-| **kubectl** | 🚧 | 🚧 | 🚧 | 🚧 | Em desenvolvimento |
-| **Ansible** | 🚧 | 🚧 | 🚧 | 🚧 | Em desenvolvimento |
-| **watch** | ✅ | ✅ | ✅ | ✅ | Pré-instalado |
+| **Docker** | Suportado | Suportado | Suportado | Suportado | Repositório oficial + fallbacks |
+| **Git** | Suportado | Suportado | Suportado | Suportado | Gerenciador de pacotes |
+| **Terraform** | Suportado | Suportado | Suportado | Suportado | Repositório HashiCorp + binário |
+| **Azure CLI** | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento |
+| **AWS CLI v2** | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento |
+| **kubectl** | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento |
+| **Ansible** | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento | Em desenvolvimento |
+| **watch** | Suportado | Suportado | Suportado | Suportado | Pré-instalado |
 
 ### Sistemas Testados
 
 | Sistema | Versão | Arquitetura | Status | Notas |
 |---------|--------|-------------|--------|-------|
-| Ubuntu | 22.04 LTS | x86_64, ARM64 | ✅ Testado | Ambiente principal de desenvolvimento |
-| Ubuntu | 20.04 LTS | x86_64, ARM64 | ✅ Testado | Compatibilidade verificada |
-| Debian | 11+ | x86_64, ARM64 | ✅ Testado | Instalação via APT |
-| WSL Ubuntu | 22.04 | x86_64 | ✅ Testado | Windows Subsystem for Linux |
-| macOS | 12+ | Intel, Apple Silicon | 🧪 Beta | Homebrew como método principal |
-| CentOS | 7, 8 | x86_64 | 🧪 Beta | YUM + repositórios oficiais |
-| RHEL | 8+ | x86_64 | 🧪 Beta | YUM + repositórios oficiais |
-| Fedora | 35+ | x86_64 | 🧪 Beta | DNF + repositórios oficiais |
+| Ubuntu | 22.04 LTS | x86_64, ARM64 | Testado | Ambiente principal de desenvolvimento |
+| Ubuntu | 20.04 LTS | x86_64, ARM64 | Testado | Compatibilidade verificada |
+| Debian | 11+ | x86_64, ARM64 | Testado | Instalação via APT |
+| WSL Ubuntu | 22.04 | x86_64 | Testado | Windows Subsystem for Linux |
+| macOS | 12+ | Intel, Apple Silicon | Beta | Homebrew como método principal |
+| CentOS | 7, 8 | x86_64 | Beta | YUM + repositórios oficiais |
+| RHEL | 8+ | x86_64 | Beta | YUM + repositórios oficiais |
+| Fedora | 35+ | x86_64 | Beta | DNF + repositórios oficiais |
 
 ### Detecção Automática
 
@@ -527,7 +527,7 @@ docker run --rm leme-test python3 /app/main.py environment-status
 docker run --rm leme-test python3 /app/main.py setup-environment --tools git,terraform --force
 ```
 
-## 🐛 Solução de Problemas
+## Solução de Problemas
 
 ### Docker não está funcionando após instalação
 
@@ -581,7 +581,7 @@ newgrp docker
 docker run hello-world
 ```
 
-## 📁 Estrutura de Arquivos Gerados
+## Estrutura de Arquivos Gerados
 
 ### Projeto Azure
 ```
@@ -603,7 +603,7 @@ meu-recurso/
 └── providers.tf     # Provider necessário
 ```
 
-## 🏷 Tags e Convenções
+## Tags e Convenções
 
 ### Nomenclatura Padrão
 
@@ -621,7 +621,7 @@ meu-recurso/
 - `environment`: Ambiente de deployment
 - `common_tags`: Tags aplicadas a todos recursos
 
-## 🔧 Personalização
+## Personalização
 
 ### Adicionando Novos Providers
 
@@ -635,7 +635,7 @@ meu-recurso/
 2. Atualizar enum `ResourceType`
 3. Testar criação com CLI
 
-## 🆘 Suporte
+## Suporte
 
 ### Comandos de Diagnóstico
 
@@ -663,13 +663,13 @@ python3 main.py run --help
 
 ---
 
-## 🎯 Resumo Rápido
+## Resumo Rápido
 
 ### Para Estudantes
 ```bash
 # 1. Setup inicial
-git clone https://github.com/SEU_USUARIO/leme.git
-cd leme
+git clone https://github.com/iesodias/leme_cli.git
+cd leme_cli
 pip install rich typer jinja2
 
 # 2. Configurar ambiente DevOps
@@ -703,13 +703,13 @@ docker build -f Dockerfile.test -t leme-test .
 docker run --rm leme-test python3 /app/main.py setup-environment --tools git,terraform --force
 ```
 
-## 🗑 Desinstalação
+## Desinstalação
 
 ### Remoção Automática
 
 #### Linux/macOS/WSL
 ```bash
-curl -sSL https://raw.githubusercontent.com/SEU_USUARIO/leme/main/uninstall.sh | bash
+curl -sSL https://raw.githubusercontent.com/iesodias/leme_cli/main/uninstall.sh | bash
 ```
 
 #### Remoção Manual
@@ -739,7 +739,7 @@ Remove-Item -Force "$env:USERPROFILE\.local\bin\leme.ps1"
 
 ---
 
-## 🎓 Para Professores
+## Para Professores
 
 ### Distribuindo para Alunos
 
@@ -768,4 +768,4 @@ leme status
 
 ---
 
-**🎉 Sua CLI Leme está pronta para usar! Divirta-se criando projetos de infraestrutura!**
+**Sua CLI Leme está pronta para usar! Divirta-se criando projetos de infraestrutura!**
