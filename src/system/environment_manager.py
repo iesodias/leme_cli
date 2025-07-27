@@ -92,19 +92,23 @@ class EnvironmentManager:
             if "git version" in first_line:
                 return first_line.replace("git version", "").strip()
         
-        elif tool == Tool.TERRAFORM:
-            # Terraform v1.5.7
-            if "Terraform" in first_line:
-                return first_line.replace("Terraform", "").strip()
         
         elif tool == Tool.AZURE_CLI:
-            # Para az, a versão está em JSON, pegar a primeira linha
+            # Para az, a versão pode estar em JSON ou texto
             try:
                 import json
                 data = json.loads(output)
-                return data.get("azure-cli-core", "Unknown")
+                # Tentar diferentes chaves possíveis
+                version = data.get("azure-cli-core") or data.get("azure-cli") or data.get("core")
+                if version:
+                    return version
             except:
-                pass
+                # Se não for JSON, tentar extrair da primeira linha
+                # azure-cli                         2.75.0
+                if "azure-cli" in first_line:
+                    parts = first_line.split()
+                    if len(parts) >= 2:
+                        return parts[1]
         
         elif tool == Tool.AWS_CLI:
             # aws-cli/2.13.25 Python/3.11.5
