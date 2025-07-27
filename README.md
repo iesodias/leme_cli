@@ -88,6 +88,9 @@ python3 main.py install azure-cli
 ### ⚙️ Configurações Avançadas
 
 ```bash
+# 🎯 MODO INTERATIVO - Escolher cada ferramenta individualmente
+python3 main.py setup-environment --interactive
+
 # Instalar apenas ferramentas obrigatórias (Docker + Git)
 python3 main.py setup-environment --required-only
 
@@ -100,6 +103,18 @@ python3 main.py setup-environment --force
 # Pular Docker (se já tiver instalado)
 python3 main.py setup-environment --skip-docker
 ```
+
+### 🎯 **Modo Interativo** - Recomendado para Iniciantes
+
+```bash
+# Permite escolher cada ferramenta individualmente
+python3 main.py setup-environment --interactive
+```
+
+**Como funciona:**
+- ✅ **Ferramentas obrigatórias** (Docker, Git): Instaladas automaticamente
+- ❓ **Ferramentas opcionais** (AWS CLI, Azure CLI, etc.): Pergunta se deseja instalar cada uma
+- 📋 **Controle total**: Você decide exatamente o que instalar
 
 ### 🔍 Verificar Status
 
@@ -246,6 +261,9 @@ python3 main.py environment-status
 python3 main.py install azure-cli
 python3 main.py install aws-cli
 
+# Adicionar mais ferramentas (modo interativo)
+python3 main.py setup-environment --interactive
+
 # Verificar versões instaladas
 docker --version
 git --version
@@ -337,6 +355,11 @@ python3 main.py install --help
 git clone https://github.com/iesodias/leme_cli.git
 cd leme_cli
 ./quick-install.sh
+
+# 🎯 MODO INTERATIVO (recomendado para iniciantes)
+python3 main.py setup-environment --interactive
+
+# 🚀 OU MODO AUTOMÁTICO (instala tudo)
 python3 main.py setup-environment
 
 # ✅ VERIFICAR SE FUNCIONOU
@@ -348,6 +371,7 @@ python3 main.py install docker        # Docker isolado
 python3 main.py install aws-cli       # AWS CLI
 python3 main.py install azure-cli     # Azure CLI
 python3 main.py setup-environment --force    # Forçar reinstalação
+python3 main.py setup-environment --interactive    # Escolher ferramentas
 ```
 
 **🎯 A CLI detecta seu sistema automaticamente e instala tudo corretamente!**

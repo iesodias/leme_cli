@@ -17,6 +17,7 @@ def setup_environment(
     required_only: bool = typer.Option(False, "--required-only", help="Instalar apenas ferramentas obrigatórias"),
     skip_docker: bool = typer.Option(False, "--skip-docker", help="Pular instalação do Docker"),
     force: bool = typer.Option(False, "--force", "-f", help="Forçar reinstalação de ferramentas"),
+    interactive: bool = typer.Option(False, "--interactive", "-i", help="Perguntar para cada ferramenta se deseja instalar"),
     tools: Optional[List[str]] = typer.Option(None, "--tools", "-t", help="Instalar apenas ferramentas específicas (ex: git,docker)")
 ) -> None:
     """
@@ -82,20 +83,55 @@ def setup_environment(
         print(":white_check_mark: [green]Todas as ferramentas selecionadas já estão instaladas![/green]")
         return
     
-    # Mostrar plano de instalação
-    print(f"\n:wrench: [bold cyan]Plano de Instalação:[/bold cyan]")
-    for tool in tools_to_install:
-        config = DEVOPS_TOOLS_CONFIG[tool]
-        required_text = "[red](obrigatória)[/red]" if config["required"] else "[yellow](opcional)[/yellow]"
-        print(f"  • [blue]{config['name']}[/blue] {required_text} - {config['description']}")
+    # Modo interativo - perguntar para cada ferramenta
+    if interactive and not force:
+        print(f"\n:question: [bold cyan]Modo Interativo - Escolha as ferramentas:[/bold cyan]")
+        selected_tools = []
+        
+        for tool in tools_to_install:
+            config = DEVOPS_TOOLS_CONFIG[tool]
+            required_text = "[red](obrigatória)[/red]" if config["required"] else "[yellow](opcional)[/yellow]"
+            
+            print(f"\n• [blue]{config['name']}[/blue] {required_text}")
+            print(f"  {config['description']}")
+            
+            # Ferramentas obrigatórias são instaladas automaticamente
+            if config["required"]:
+                print(f"  :white_check_mark: [green]Será instalada automaticamente (obrigatória)[/green]")
+                selected_tools.append(tool)
+            else:
+                confirm = typer.confirm(f"  Deseja instalar {config['name']}?")
+                if confirm:
+                    selected_tools.append(tool)
+                else:
+                    print(f"  :information: [yellow]Pulando {config['name']}[/yellow]")
+        
+        tools_to_install = selected_tools
+        
+        if not tools_to_install:
+            print("\n:information: [yellow]Nenhuma ferramenta selecionada para instalação[/yellow]")
+            return
+        
+        print(f"\n:white_check_mark: [bold green]Ferramentas selecionadas para instalação:[/bold green]")
+        for tool in tools_to_install:
+            config = DEVOPS_TOOLS_CONFIG[tool]
+            print(f"  • [blue]{config['name']}[/blue]")
     
-    # Confirmar instalação
-    if not force:
-        print()
-        confirm = typer.confirm("Deseja continuar com a instalação?")
-        if not confirm:
-            print(":x: [yellow]Instalação cancelada pelo usuário[/yellow]")
-            raise typer.Exit(0)
+    else:
+        # Modo tradicional - mostrar plano completo
+        print(f"\n:wrench: [bold cyan]Plano de Instalação:[/bold cyan]")
+        for tool in tools_to_install:
+            config = DEVOPS_TOOLS_CONFIG[tool]
+            required_text = "[red](obrigatória)[/red]" if config["required"] else "[yellow](opcional)[/yellow]"
+            print(f"  • [blue]{config['name']}[/blue] {required_text} - {config['description']}")
+        
+        # Confirmar instalação
+        if not force:
+            print()
+            confirm = typer.confirm("Deseja continuar com a instalação?")
+            if not confirm:
+                print(":x: [yellow]Instalação cancelada pelo usuário[/yellow]")
+                raise typer.Exit(0)
     
     print("\n:gear: [bold green]Iniciando instalação das ferramentas...[/bold green]")
     

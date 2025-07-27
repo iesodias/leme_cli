@@ -102,11 +102,12 @@ def setup_environment_command(
     required_only: bool = typer.Option(False, "--required-only", help="Instalar apenas ferramentas obrigatórias"),
     skip_docker: bool = typer.Option(False, "--skip-docker", help="Pular instalação do Docker"),
     force: bool = typer.Option(False, "--force", "-f", help="Forçar reinstalação de ferramentas"),
-    tools: Optional[str] = typer.Option(None, "--tools", "-t", help="Instalar apenas ferramentas específicas (ex: terraform,git)")
+    interactive: bool = typer.Option(False, "--interactive", "-i", help="Perguntar para cada ferramenta se deseja instalar"),
+    tools: Optional[str] = typer.Option(None, "--tools", "-t", help="Instalar apenas ferramentas específicas (ex: git,docker)")
 ):
     """Configura o ambiente DevOps completo para o curso."""
     tools_list = tools.split(',') if tools else None
-    setup_environment(check_only, required_only, skip_docker, force, tools_list)
+    setup_environment(check_only, required_only, skip_docker, force, interactive, tools_list)
 
 
 @app.command("environment-status") 
