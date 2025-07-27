@@ -12,51 +12,30 @@ A CLI Leme instala e configura automaticamente:
 
 ## Instalação e Uso
 
-### Método 1: Instalação Automática (Recomendado)
+### Instalação Automática (2 comandos apenas)
 
-#### Passo 1: Baixar a CLI
 ```bash
 git clone https://github.com/iesodias/leme_cli.git
 cd leme_cli
-```
-
-#### Passo 2: Executar script de instalação
-```bash
 ./quick-install.sh
 ```
 
-#### Passo 3: Configurar seu ambiente
-```bash
-python3 main.py setup-environment
-```
+O script `quick-install.sh` faz tudo automaticamente:
+- Detecta seu sistema operacional (Ubuntu, CentOS, Fedora, macOS)
+- Instala Python 3 e pip se não estiverem instalados
+- Instala as dependências necessárias (rich, typer, jinja2)
+- Te diz exatamente o que fazer depois
 
-#### Passo 4: Verificar se tudo foi instalado
+#### Depois da instalação:
 ```bash
+# Configurar seu ambiente DevOps
+python3 main.py setup-environment
+
+# Verificar se tudo foi instalado
 python3 main.py environment-status
 ```
 
-### Método 2: Se não tiver Python instalado
-
-#### No Ubuntu/Debian:
-```bash
-sudo apt update
-sudo apt install python3 python3-pip git
-git clone https://github.com/iesodias/leme_cli.git
-cd leme_cli
-./quick-install.sh
-```
-
-#### No macOS:
-```bash
-# Instalar Homebrew se não tiver
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Instalar Python
-brew install python3 git
-git clone https://github.com/iesodias/leme_cli.git
-cd leme_cli
-./quick-install.sh
-```
+### Se o script automático não funcionar
 
 #### No Windows:
 1. Baixar e instalar Python de https://python.org
@@ -65,7 +44,16 @@ cd leme_cli
 ```bash
 git clone https://github.com/iesodias/leme_cli.git
 cd leme_cli
+pip install rich typer jinja2
 python main.py setup-environment
+```
+
+#### Instalação manual (qualquer sistema):
+```bash
+git clone https://github.com/iesodias/leme_cli.git
+cd leme_cli
+pip install rich typer jinja2
+python3 main.py setup-environment
 ```
 
 ## Comandos Principais
