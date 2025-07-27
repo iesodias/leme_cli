@@ -126,23 +126,55 @@ brew install python3
 ```
 
 ### Docker não funciona após instalação
-```bash
-# Linux: Reiniciar terminal ou executar
-sudo systemctl start docker
-sudo usermod -aG docker $USER
-# Depois fazer logout/login
 
-# macOS: Abrir Docker Desktop
-open /Applications/Docker.app
+#### Linux - Problema de permissões (mais comum):
+```bash
+# 1. Adicionar usuário ao grupo docker
+sudo usermod -aG docker $USER
+
+# 2. Aplicar as mudanças (escolha uma opção):
+newgrp docker        # Opção A: Nova sessão de grupo
+# OU
+logout/login         # Opção B: Logout e login novamente  
+# OU
+sudo reboot          # Opção C: Reiniciar sistema
+
+# 3. Testar se funcionou
+docker run hello-world
 ```
 
-### Permissões negadas
+#### Linux - Docker daemon não está rodando:
 ```bash
-# Linux: Adicionar usuário ao grupo docker
+# Iniciar Docker daemon
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# Verificar status
+sudo systemctl status docker
+```
+
+#### macOS - Docker Desktop não está rodando:
+```bash
+# Abrir Docker Desktop
+open /Applications/Docker.app
+
+# Ou verificar se está instalado
+ls /Applications/Docker.app
+```
+
+### Erro "permission denied" no Docker
+```bash
+# Verificar se usuário está no grupo docker
+groups | grep docker
+
+# Se não estiver, adicionar:
 sudo usermod -aG docker $USER
 newgrp docker
 
-# Testar
+# Verificar novamente
+groups | grep docker
+
+# Testar Docker
 docker run hello-world
 ```
 

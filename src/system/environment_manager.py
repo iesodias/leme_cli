@@ -75,7 +75,7 @@ class EnvironmentManager:
         Returns:
             str: Versão extraída ou None
         """
-        lines = output.strip().split('\\n')
+        lines = output.strip().split('\n')
         if not lines:
             return None
             
@@ -126,7 +126,7 @@ class EnvironmentManager:
             # ansible [core 2.15.3]
             if "ansible" in first_line:
                 import re
-                version_match = re.search(r'\\[core ([^\\]]+)\\]', first_line)
+                version_match = re.search(r'\[core ([^\]]+)\]', first_line)
                 if version_match:
                     return version_match.group(1)
         
@@ -144,7 +144,7 @@ class EnvironmentManager:
         Returns:
             Dict[Tool, ToolStatus]: Status de todas as ferramentas
         """
-        print("\\n:mag: [bold blue]Verificando ferramentas instaladas...[/bold blue]")
+        print("\n:mag: [bold blue]Verificando ferramentas instaladas...[/bold blue]")
         
         with Progress() as progress:
             task = progress.add_task("[blue]Verificando...", total=len(Tool))
@@ -160,7 +160,7 @@ class EnvironmentManager:
         if not self.tools_status:
             self.check_all_tools()
         
-        print("\\n:clipboard: [bold cyan]Relatório do Ambiente DevOps[/bold cyan]")
+        print("\n:clipboard: [bold cyan]Relatório do Ambiente DevOps[/bold cyan]")
         
         # Criar tabela
         table = Table(show_header=True, header_style="bold magenta")
@@ -207,7 +207,7 @@ class EnvironmentManager:
         required_tools = [t for t in Tool if DEVOPS_TOOLS_CONFIG[t]["required"]]
         required_installed = sum(1 for t in required_tools if self.tools_status.get(t, ToolStatus(t, False)).installed)
         
-        print(f"\\n:chart_with_upwards_trend: [bold]Resumo:[/bold]")
+        print(f"\n:chart_with_upwards_trend: [bold]Resumo:[/bold]")
         print(f"  • [blue]Ferramentas instaladas:[/blue] {installed_count}/{total_count}")
         print(f"  • [red]Ferramentas obrigatórias:[/red] {required_installed}/{len(required_tools)}")
         

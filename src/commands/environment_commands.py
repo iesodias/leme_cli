@@ -83,7 +83,7 @@ def setup_environment(
         return
     
     # Mostrar plano de instalação
-    print(f"\\n:wrench: [bold cyan]Plano de Instalação:[/bold cyan]")
+    print(f"\n:wrench: [bold cyan]Plano de Instalação:[/bold cyan]")
     for tool in tools_to_install:
         config = DEVOPS_TOOLS_CONFIG[tool]
         required_text = "[red](obrigatória)[/red]" if config["required"] else "[yellow](opcional)[/yellow]"
@@ -97,13 +97,13 @@ def setup_environment(
             print(":x: [yellow]Instalação cancelada pelo usuário[/yellow]")
             raise typer.Exit(0)
     
-    print("\\n:gear: [bold green]Iniciando instalação das ferramentas...[/bold green]")
+    print("\n:gear: [bold green]Iniciando instalação das ferramentas...[/bold green]")
     
     # Instalar ferramentas uma por vez
     success_count = 0
     for tool in tools_to_install:
         config = DEVOPS_TOOLS_CONFIG[tool]
-        print(f"\\n:arrow_forward: [bold blue]Instalando {config['name']}...[/bold blue]")
+        print(f"\n:arrow_forward: [bold blue]Instalando {config['name']}...[/bold blue]")
         
         try:
             success = _install_tool(tool, env_manager.system_info, force)
@@ -117,22 +117,22 @@ def setup_environment(
             print(f":x: [red]Erro ao instalar {config['name']}: {str(e)}[/red]")
     
     # Relatório final
-    print(f"\\n:chart_with_upwards_trend: [bold cyan]Relatório de Instalação:[/bold cyan]")
+    print(f"\n:chart_with_upwards_trend: [bold cyan]Relatório de Instalação:[/bold cyan]")
     print(f"  • [green]Instaladas com sucesso:[/green] {success_count}")
     print(f"  • [red]Falharam:[/red] {len(tools_to_install) - success_count}")
     
     # Verificar ambiente final
-    print("\\n:mag: [bold blue]Verificando ambiente após instalação...[/bold blue]")
+    print("\n:mag: [bold blue]Verificando ambiente após instalação...[/bold blue]")
     env_manager.check_all_tools()
     env_manager.show_status_report()
     
     # Status final
     if env_manager.is_environment_ready():
-        print("\\n:party_popper: [bold green]Ambiente DevOps configurado com sucesso![/bold green]")
+        print("\n:party_popper: [bold green]Ambiente DevOps configurado com sucesso![/bold green]")
         print(":information: [blue]Você está pronto para o curso![/blue]")
     else:
         missing = env_manager.get_missing_tools(only_required=True)
-        print(f"\\n:warning: [yellow]Ainda faltam algumas ferramentas obrigatórias: {[DEVOPS_TOOLS_CONFIG[t]['name'] for t in missing]}[/yellow]")
+        print(f"\n:warning: [yellow]Ainda faltam algumas ferramentas obrigatórias: {[DEVOPS_TOOLS_CONFIG[t]['name'] for t in missing]}[/yellow]")
         print(":information: [blue]Execute novamente o comando para tentar instalar as ferramentas em falta[/blue]")
 
 

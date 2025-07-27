@@ -48,7 +48,7 @@ def create_project(name: str, provider: str) -> None:
         # Gerar arquivos do projeto
         template_manager.render_project_files(provider_enum, template_data, project_path)
         
-        print(f"\\n:rocket: Projeto [bold green]{name}[/bold green] criado com sucesso!")
+        print(f"\n:rocket: Projeto [bold green]{name}[/bold green] criado com sucesso!")
         print(f"Acesse o diretório com: [bold cyan]cd {name}[/bold cyan]")
         
     except ValidationError as e:
@@ -76,7 +76,7 @@ def create_module(name: str) -> None:
         template_manager = TemplateManager()
         template_manager.render_module_files(module_path)
         
-        print(f"\\n:sparkles: Módulo [bold blue]{name}[/bold blue] criado com sucesso!")
+        print(f"\n:sparkles: Módulo [bold blue]{name}[/bold blue] criado com sucesso!")
         
     except ValidationError as e:
         print(f":x: [bold red]Erro:[/bold red] {e}")
@@ -121,7 +121,7 @@ def create_resource(resource_type: str, provider: str, name: str) -> None:
         # Gerar arquivos do recurso
         template_manager.render_resource_files(provider_enum, resource_enum.value, template_data, resource_path)
         
-        print(f"\\n:rocket: Módulo de recurso [bold green]{name}[/bold green] criado com sucesso!")
+        print(f"\n:rocket: Módulo de recurso [bold green]{name}[/bold green] criado com sucesso!")
         
     except ValidationError as e:
         print(f":x: [bold red]Erro:[/bold red] {e}")

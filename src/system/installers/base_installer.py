@@ -102,7 +102,11 @@ class BaseInstaller(ABC):
             )
             
             if result.returncode != 0:
-                print("  [yellow]![/yellow] Docker instalado mas não está rodando")
+                # Verificar se é problema de permissão específico
+                if "permission denied" in result.stderr.lower() or "connect: permission denied" in result.stderr.lower():
+                    print("  [red]✗[/red] Problema de permissão detectado no Docker daemon")
+                else:
+                    print("  [yellow]![/yellow] Docker instalado mas não está rodando")
                 return False
             
             # Tentar rodar container de teste
@@ -118,7 +122,11 @@ class BaseInstaller(ABC):
                 print("  [green]✓[/green] Docker está funcionando corretamente!")
                 return True
             else:
-                print("  [yellow]![/yellow] Docker instalado mas não consegue executar containers")
+                # Verificar se é problema de permissão específico
+                if "permission denied" in result.stderr.lower() or "connect: permission denied" in result.stderr.lower():
+                    print("  [red]✗[/red] Problema de permissão detectado ao executar containers")
+                else:
+                    print("  [yellow]![/yellow] Docker instalado mas não consegue executar containers")
                 return False
                 
         except subprocess.TimeoutExpired:
@@ -202,7 +210,7 @@ class BaseInstaller(ABC):
     
     def print_manual_instructions(self) -> None:
         """Imprime instruções para instalação manual."""
-        print(f"\\n[bold yellow]📋 Instruções para instalação manual no {self.system_info.os_type.value}:[/bold yellow]")
+        print(f"\n[bold yellow]📋 Instruções para instalação manual no {self.system_info.os_type.value}:[/bold yellow]")
         print()
         
         for i, command in enumerate(self.get_install_commands(), 1):

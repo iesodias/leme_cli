@@ -90,15 +90,83 @@ class DockerInstaller:
         # Testar instalação
         if test_after_install:
             print()
-            if self.installer.test_docker_installation():
+            test_result = self.installer.test_docker_installation()
+            if test_result:
                 print()
                 print(":whale: [bold green]Docker instalado e funcionando![/bold green]")
             else:
                 print()
                 print(":warning: [bold yellow]Docker instalado mas pode não estar funcionando corretamente.[/bold yellow]")
-                print("Tente reiniciar o sistema ou iniciar o Docker manualmente.")
+                self._handle_docker_permission_issues()
         
         return True
+    
+    def _handle_docker_permission_issues(self) -> None:
+        """Lida com problemas comuns de permissão do Docker."""
+        print()
+        print(":information_source: [bold cyan]Diagnóstico de Problemas Comuns:[/bold cyan]")
+        
+        # Verificar se é problema de permissão (apenas Linux)
+        if self.system_info.os_type != OperatingSystem.MACOS:
+            import subprocess
+            import os
+            
+            # Verificar se usuário está no grupo docker
+            try:
+                result = subprocess.run(["groups"], capture_output=True, text=True)
+                groups = result.stdout.strip()
+                
+                if "docker" not in groups:
+                    print(":warning: [yellow]Problema identificado: Usuário não está no grupo 'docker'[/yellow]")
+                    print()
+                    print("[bold]Soluções:[/bold]")
+                    print("1. [blue]Adicionar usuário ao grupo docker:[/blue]")
+                    print(f"   sudo usermod -aG docker {os.getenv('USER', 'seu_usuario')}")
+                    print("   newgrp docker")
+                    print()
+                    print("2. [blue]Ou fazer logout/login para aplicar as permissões[/blue]")
+                    print()
+                    print("3. [blue]Ou reiniciar o sistema[/blue]")
+                    print()
+                    
+                    # Tentar adicionar automaticamente se confirmado
+                    import typer
+                    if typer.confirm("Deseja tentar adicionar automaticamente ao grupo docker?"):
+                        try:
+                            subprocess.run([
+                                "sudo", "usermod", "-aG", "docker", os.getenv('USER', 'user')
+                            ], check=True)
+                            print(":white_check_mark: [green]Usuário adicionado ao grupo docker![/green]")
+                            print(":information: [blue]Execute 'newgrp docker' ou faça logout/login para aplicar[/blue]")
+                        except subprocess.CalledProcessError:
+                            print(":x: [red]Falha ao adicionar usuário ao grupo docker[/red]")
+                else:
+                    print(":white_check_mark: [green]Usuário já está no grupo docker[/green]")
+                    
+            except Exception:
+                pass
+        
+        # Verificar se Docker daemon está rodando
+        try:
+            result = subprocess.run(["docker", "version"], capture_output=True, text=True)
+            if "Cannot connect to the Docker daemon" in result.stderr:
+                print(":warning: [yellow]Docker daemon não está rodando[/yellow]")
+                print()
+                print("[bold]Soluções:[/bold]")
+                if self.system_info.os_type == OperatingSystem.MACOS:
+                    print("1. [blue]Abrir Docker Desktop:[/blue]")
+                    print("   open /Applications/Docker.app")
+                else:
+                    print("1. [blue]Iniciar Docker daemon:[/blue]")
+                    print("   sudo systemctl start docker")
+                    print("   sudo systemctl enable docker")
+                print()
+        except Exception:
+            pass
+        
+        print("[bold]Para mais ajuda:[/bold]")
+        print("• Documentação: https://docs.docker.com/engine/install/linux-postinstall/")
+        print("• Tente: python3 main.py environment-status")
     
     def uninstall(self) -> bool:
         """

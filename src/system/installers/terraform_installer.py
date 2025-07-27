@@ -61,7 +61,7 @@ class TerraformInstaller(BaseInstaller):
             )
             if result.returncode == 0:
                 # Terraform v1.7.1
-                first_line = result.stdout.strip().split('\\n')[0]
+                first_line = result.stdout.strip().split('\n')[0]
                 if "Terraform" in first_line:
                     return first_line.replace("Terraform", "").strip()
             return None
