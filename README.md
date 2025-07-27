@@ -1,37 +1,52 @@
-# CLI Leme - Configuração Automática de Ambiente DevOps
+# CLI Leme DevOps - Configuração Automática de Ambiente
 
-Ferramenta para configurar automaticamente seu ambiente de desenvolvimento DevOps com Docker, Git e outras ferramentas essenciais para o curso.
+🚀 **Configuração automática do seu ambiente DevOps em 3 comandos**
 
-## O que esta CLI faz
+Esta CLI instala e configura automaticamente todas as ferramentas necessárias para o curso:
 
-A CLI Leme instala e configura automaticamente:
-- **Docker** - Para containerização
-- **Git** - Para controle de versão  
-- **Outras ferramentas** - Azure CLI, AWS CLI v2, kubectl, Ansible (opcionais)
+## ✅ Ferramentas Instaladas
 
-## Instalação e Uso
+### 🔧 **Obrigatórias** (instaladas automaticamente)
+- **Docker** - Para containerização e ambientes isolados
+- **Git** - Para controle de versão de código
 
-### Instalação Automática (2 comandos apenas)
+### ☁️ **Opcionais** (você escolhe)
+- **AWS CLI v2** - Interface de linha de comando da Amazon Web Services
+- **Azure CLI** - Interface de linha de comando do Microsoft Azure
+- **kubectl** - Gerenciamento de clusters Kubernetes
+- **Ansible** - Automação de configuração e deploy
+- **watch** - Monitoramento de comandos em tempo real
+
+## 🚀 Instalação Rápida (3 Comandos)
+
+### Para Alunos - Configuração Completa
 
 ```bash
+# 1. Baixar a CLI
 git clone https://github.com/iesodias/leme_cli.git
 cd leme_cli
+
+# 2. Instalar dependências automaticamente  
 ./quick-install.sh
+
+# 3. Configurar ambiente DevOps completo
+python3 main.py setup-environment
 ```
 
-O script `quick-install.sh` faz tudo automaticamente:
-- Detecta seu sistema operacional (Ubuntu, CentOS, Fedora, macOS)
-- Instala Python 3 e pip se não estiverem instalados
-- Instala as dependências necessárias (rich, typer, jinja2)
-- Te diz exatamente o que fazer depois
+**Pronto!** 🎉 Agora você tem Docker, Git e todas as ferramentas configuradas.
 
-#### Depois da instalação:
+### ✅ Verificar se funcionou
+
 ```bash
-# Configurar seu ambiente DevOps
-python3 main.py setup-environment
-
-# Verificar se tudo foi instalado
+# Ver o status de todas as ferramentas
 python3 main.py environment-status
+
+# Testar o Docker
+docker run hello-world
+
+# Ver versões instaladas
+docker --version
+git --version
 ```
 
 ### Se o script automático não funcionar
@@ -55,30 +70,48 @@ pip install rich typer jinja2
 python3 main.py setup-environment
 ```
 
-## Comandos Principais
+## 🛠️ Comandos Úteis para Alunos
 
-### Configurar ambiente completo
+### 📦 Instalar Ferramentas Individuais
+
 ```bash
-# Instalar todas as ferramentas automaticamente
-python3 main.py setup-environment
+# Instalar Docker isoladamente
+python3 main.py install docker
 
-# Instalar apenas ferramentas obrigatórias (Docker, Git)
+# Instalar AWS CLI v2
+python3 main.py install aws-cli
+
+# Instalar Azure CLI  
+python3 main.py install azure-cli
+```
+
+### ⚙️ Configurações Avançadas
+
+```bash
+# Instalar apenas ferramentas obrigatórias (Docker + Git)
 python3 main.py setup-environment --required-only
 
 # Instalar ferramentas específicas
-python3 main.py setup-environment --tools git,docker
+python3 main.py setup-environment --tools docker,git,aws-cli
 
-# Forçar instalação sem perguntas
+# Forçar reinstalação (se algo deu errado)
 python3 main.py setup-environment --force
+
+# Pular Docker (se já tiver instalado)
+python3 main.py setup-environment --skip-docker
 ```
 
-### Verificar status das ferramentas
+### 🔍 Verificar Status
+
 ```bash
-# Ver quais ferramentas estão instaladas
+# Ver todas as ferramentas instaladas
 python3 main.py environment-status
 
-# Ver informações do seu sistema
+# Ver informações do seu sistema operacional
 python3 main.py system-info
+
+# Verificar apenas Docker
+python3 main.py install docker --check-only
 ```
 
 
@@ -165,41 +198,120 @@ docker run hello-world
 ```
 
 
-## Sistemas Suportados
+## 💻 Sistemas Suportados
 
-| Sistema | Status | Método |
-|---------|--------|--------|
-| Ubuntu 20.04+ | Testado | apt + repositórios oficiais |
-| Debian 11+ | Testado | apt + repositórios oficiais |
-| macOS 12+ | Funcional | Homebrew |
-| WSL Ubuntu | Testado | apt + repositórios oficiais |
-| CentOS/RHEL | Funcional | yum/dnf + repositórios oficiais |
-| Fedora | Funcional | dnf + repositórios oficiais |
+| Sistema Operacional | Status | Ferramentas Suportadas |
+|---------------------|--------|------------------------|
+| **Ubuntu 20.04+** | ✅ Totalmente Testado | Docker, Git, AWS CLI, Azure CLI |
+| **Debian 11+** | ✅ Totalmente Testado | Docker, Git, AWS CLI, Azure CLI |
+| **macOS 12+** | ✅ Funcional | Docker, Git, AWS CLI, Azure CLI |
+| **WSL Ubuntu** | ✅ Testado | Docker, Git, AWS CLI, Azure CLI |
+| **CentOS/RHEL 7+** | ⚠️ Funcional | Docker, Git, AWS CLI, Azure CLI |
+| **Fedora 35+** | ⚠️ Funcional | Docker, Git, AWS CLI, Azure CLI |
+
+### 🔧 Métodos de Instalação Automática
+
+- **Ubuntu/Debian**: Repositórios oficiais via `apt`
+- **macOS**: Homebrew + instaladores oficiais
+- **CentOS/RHEL/Fedora**: Repositórios oficiais via `yum`/`dnf`
+- **Arquiteturas**: x86_64 (Intel/AMD) e ARM64 (Apple Silicon/ARM)
 
 
-## Workflow Recomendado
+## 📚 Guia Passo a Passo para Alunos
 
-### 1. Configuração inicial (primeira vez)
+### 🥇 **PRIMEIRA VEZ** - Configuração Inicial
+
 ```bash
+# 1. Clonar o repositório
 git clone https://github.com/iesodias/leme_cli.git
 cd leme_cli
+
+# 2. Instalar dependências
 ./quick-install.sh
+
+# 3. Configurar ambiente completo
 python3 main.py setup-environment
+
+# 4. Verificar se funcionou
 python3 main.py environment-status
 ```
 
-### 2. Usar as ferramentas instaladas
+### 🔄 **USO DIÁRIO** - Comandos Úteis
+
 ```bash
-# Verificar versões das ferramentas
+# Verificar status das ferramentas
+python3 main.py environment-status
+
+# Instalar ferramenta específica se precisar
+python3 main.py install azure-cli
+python3 main.py install aws-cli
+
+# Verificar versões instaladas
 docker --version
 git --version
+aws --version    # Se instalou AWS CLI
+az --version     # Se instalou Azure CLI
+```
+
+### 🧪 **TESTAR INSTALAÇÃO**
+
+```bash
+# Testar Docker
+docker run hello-world
+
+# Testar Git (configurar se for primeira vez)
+git config --global user.name "Seu Nome"
+git config --global user.email "seu.email@exemplo.com"
+git --version
+
+# Testar AWS CLI (se instalou)
 aws --version
+
+# Testar Azure CLI (se instalou)  
 az --version
 ```
 
-## Comandos de Ajuda
+## 🆘 Solução de Problemas Rápida
+
+### ❌ **Erro: "Python não encontrado"**
+```bash
+# Ubuntu/Debian
+sudo apt update && sudo apt install python3 python3-pip
+
+# macOS
+brew install python3
+
+# Windows - Baixar de python.org
+```
+
+### ❌ **Erro: "Docker não funciona"**
+```bash
+# 1. Verificar se Docker está rodando
+docker --version
+
+# 2. Adicionar usuário ao grupo docker (Linux)
+sudo usermod -aG docker $USER
+newgrp docker
+
+# 3. Testar novamente
+docker run hello-world
+```
+
+### ❌ **Erro: "Permission denied"**
+```bash
+# Verificar permissões e tentar novamente
+python3 main.py setup-environment --force
+```
+
+### 💡 **Comandos de Diagnóstico**
 
 ```bash
+# Ver informações do sistema
+python3 main.py system-info
+
+# Ver status detalhado de todas as ferramentas
+python3 main.py environment-status
+
 # Ajuda geral
 python3 main.py --help
 
@@ -208,33 +320,34 @@ python3 main.py setup-environment --help
 python3 main.py install --help
 ```
 
-## Resumo dos Comandos Essenciais
+## 📞 Suporte
+
+**Se nada funcionar:**
+
+1. **Primeiro**: `python3 main.py environment-status`
+2. **Depois**: `python3 main.py setup-environment --force`
+3. **Por último**: Abrir issue no GitHub com a saída do comando `python3 main.py system-info`
+
+---
+
+## 📋 Resumo - Cola para Alunos
 
 ```bash
-# Setup inicial
+# ⬇️ BAIXAR E INSTALAR (primeira vez)
 git clone https://github.com/iesodias/leme_cli.git
 cd leme_cli
 ./quick-install.sh
-
-# Configurar ambiente
 python3 main.py setup-environment
 
-# Verificar instalação
+# ✅ VERIFICAR SE FUNCIONOU
 python3 main.py environment-status
-
-# Usar as ferramentas
 docker run hello-world
-git config --global user.name "Seu Nome"
-git config --global user.email "seu.email@exemplo.com"
+
+# 🔧 COMANDOS ÚTEIS
+python3 main.py install docker        # Docker isolado
+python3 main.py install aws-cli       # AWS CLI
+python3 main.py install azure-cli     # Azure CLI
+python3 main.py setup-environment --force    # Forçar reinstalação
 ```
 
-## Suporte
-
-Se encontrar problemas:
-
-1. **Verifique o status**: `python3 main.py environment-status`
-2. **Veja informações do sistema**: `python3 main.py system-info`  
-3. **Tente forçar reinstalação**: `python3 main.py setup-environment --force`
-4. **Use o container de teste**: `docker build -f Dockerfile.test -t leme-test .`
-
-A CLI detecta automaticamente seu sistema operacional e escolhe o melhor método de instalação para cada ferramenta.
+**🎯 A CLI detecta seu sistema automaticamente e instala tudo corretamente!**
