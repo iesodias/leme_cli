@@ -7,6 +7,8 @@ from typing import Optional, List
 from ..system.environment_manager import EnvironmentManager
 from ..system.docker_installer import DockerInstaller
 from ..system.installers.git_installer import GitInstaller
+from ..system.installers.aws_cli_installer import AwsCliInstaller
+from ..system.installers.azure_cli_installer import AzureCliInstaller
 from ..config.constants import Tool, DEVOPS_TOOLS_CONFIG
 
 
@@ -200,14 +202,22 @@ def _install_git(system_info) -> bool:
 
 def _install_azure_cli(system_info) -> bool:
     """Instala Azure CLI baseado no sistema operacional."""
-    print(":information: [blue]Instalação do Azure CLI será implementada na próxima etapa[/blue]")
-    return False
+    try:
+        azure_installer = AzureCliInstaller(system_info)
+        return azure_installer.install()
+    except Exception as e:
+        print(f":x: [red]Erro durante instalação do Azure CLI: {str(e)}[/red]")
+        return False
 
 
 def _install_aws_cli(system_info) -> bool:
     """Instala AWS CLI v2 baseado no sistema operacional."""
-    print(":information: [blue]Instalação do AWS CLI será implementada na próxima etapa[/blue]")
-    return False
+    try:
+        aws_installer = AwsCliInstaller(system_info)
+        return aws_installer.install()
+    except Exception as e:
+        print(f":x: [red]Erro durante instalação do AWS CLI: {str(e)}[/red]")
+        return False
 
 
 def _install_kubectl(system_info) -> bool:

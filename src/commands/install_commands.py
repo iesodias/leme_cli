@@ -5,6 +5,9 @@ from rich import print
 from typing import Optional
 
 from ..system.docker_installer import DockerInstaller
+from ..system.installers.azure_cli_installer import AzureCliInstaller
+from ..system.installers.aws_cli_installer import AwsCliInstaller
+from ..system.system_detector import SystemDetector
 
 
 def install_docker(
@@ -142,6 +145,104 @@ def system_info() -> None:
         print(f"[bold]Gerenciador de Pacotes:[/bold] {SystemDetector.get_package_manager(system_info.os_type) or 'N/A'}")
         print(f"[bold]Instalação Docker Suportada:[/bold] {'Sim' if SystemDetector.supports_docker_installation(system_info.os_type) else 'Não'}")
         
+    except Exception as e:
+        print(f":x: [bold red]Erro inesperado:[/bold red] {e}")
+        raise typer.Exit(code=1)
+
+
+def install_azure_cli(force: bool = False, manual: bool = False) -> None:
+    """
+    Instala o Azure CLI automaticamente baseado no sistema operacional.
+    
+    Args:
+        force: Forçar reinstalação mesmo se já estiver instalado
+        manual: Mostrar instruções para instalação manual
+    """
+    try:
+        system_info = SystemDetector.detect()
+        azure_installer = AzureCliInstaller(system_info)
+        
+        print(":cloud: [bold blue]Instalação do Azure CLI[/bold blue]")
+        print(f"Sistema detectado: [green]{system_info}[/green]")
+        print()
+        
+        # Mostrar instruções manuais se solicitado
+        if manual:
+            azure_installer.print_manual_instructions()
+            return
+        
+        # Verificar se já está instalado
+        if not force and azure_installer.is_installed():
+            version = azure_installer.get_installed_version()
+            print(f":white_check_mark: Azure CLI já está instalado (versão {version})")
+            
+            if not typer.confirm("Deseja reinstalar?"):
+                return
+        
+        # Instalar Azure CLI
+        print()
+        success = azure_installer.install()
+        
+        if success:
+            print()
+            print(":white_check_mark: [bold green]Azure CLI instalado com sucesso![/bold green]")
+            print("Teste com: [cyan]az --version[/cyan]")
+        else:
+            print()
+            print(":x: [bold red]Falha na instalação automática.[/bold red]")
+            print()
+            azure_installer.print_manual_instructions()
+            raise typer.Exit(code=1)
+            
+    except Exception as e:
+        print(f":x: [bold red]Erro inesperado:[/bold red] {e}")
+        raise typer.Exit(code=1)
+
+
+def install_aws_cli(force: bool = False, manual: bool = False) -> None:
+    """
+    Instala o AWS CLI v2 automaticamente baseado no sistema operacional.
+    
+    Args:
+        force: Forçar reinstalação mesmo se já estiver instalado
+        manual: Mostrar instruções para instalação manual
+    """
+    try:
+        system_info = SystemDetector.detect()
+        aws_installer = AwsCliInstaller(system_info)
+        
+        print(":cloud: [bold blue]Instalação do AWS CLI v2[/bold blue]")
+        print(f"Sistema detectado: [green]{system_info}[/green]")
+        print()
+        
+        # Mostrar instruções manuais se solicitado
+        if manual:
+            aws_installer.print_manual_instructions()
+            return
+        
+        # Verificar se já está instalado
+        if not force and aws_installer.is_installed():
+            version = aws_installer.get_installed_version()
+            print(f":white_check_mark: AWS CLI v2 já está instalado (versão {version})")
+            
+            if not typer.confirm("Deseja reinstalar?"):
+                return
+        
+        # Instalar AWS CLI
+        print()
+        success = aws_installer.install()
+        
+        if success:
+            print()
+            print(":white_check_mark: [bold green]AWS CLI v2 instalado com sucesso![/bold green]")
+            print("Teste com: [cyan]aws --version[/cyan]")
+        else:
+            print()
+            print(":x: [bold red]Falha na instalação automática.[/bold red]")
+            print()
+            aws_installer.print_manual_instructions()
+            raise typer.Exit(code=1)
+            
     except Exception as e:
         print(f":x: [bold red]Erro inesperado:[/bold red] {e}")
         raise typer.Exit(code=1)
