@@ -70,3 +70,20 @@ exemplo-*/
 *.backup
 *.bak
 *.tmp
+
+# Claude/AI related files
+CLAUDE.md
+.claude/
+*.claude
+
+# Documentação interna/desenvolvimento
+TECHNICAL.md
+EXAMPLES.md
+QUICKSTART.md
+
+# Scripts de teste (manter apenas container)
+test_*.py
+*_test.py
+
+# Arquivo de distribuição pode ser mantido separadamente
+DISTRIBUTION_PLAN.md
