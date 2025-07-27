@@ -1,0 +1,9 @@
+# Backend para armazenar o estado do Terraform de forma remota no AWS S3
+terraform {
+  backend "s3" {
+    bucket = "{{ bucket_name }}"
+    key    = "{{ project_name }}/terraform.tfstate"
+    region = "{{ aws_region }}"
+    dynamodb_table = "{{ bucket_name }}-tf-lock" # Opcional, mas boa prática para lock
+  }
+}

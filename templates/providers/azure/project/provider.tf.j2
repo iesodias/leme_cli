@@ -1,0 +1,14 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0" # Sinta-se à vontade para fixar uma versão como "4.35.0"
+    }
+  }
+  required_version = ">= 1.5.0"
+}
+
+provider "azurerm" {
+  # Este bloco é obrigatório pelo provedor do Azure
+  features {}
+}

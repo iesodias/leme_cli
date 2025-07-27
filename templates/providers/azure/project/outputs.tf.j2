@@ -1,0 +1,26 @@
+# Outputs do projeto {{ project_name }}
+
+output "resource_group_name" {
+  description = "Nome do Resource Group principal"
+  value       = azurerm_resource_group.main.name
+}
+
+output "resource_group_location" {
+  description = "Localizacao do Resource Group principal"
+  value       = azurerm_resource_group.main.location
+}
+
+output "resource_group_id" {
+  description = "ID do Resource Group principal"
+  value       = azurerm_resource_group.main.id
+}
+
+output "project_tags" {
+  description = "Tags aplicadas aos recursos do projeto"
+  value       = var.common_tags
+}
+
+output "environment" {
+  description = "Ambiente atual do deployment"
+  value       = var.environment
+}

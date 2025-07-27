@@ -1,0 +1,40 @@
+# Variaveis do projeto {{ project_name }}
+
+variable "location" {
+  description = "Localizacao/regiao do Azure onde os recursos serao criados"
+  type        = string
+  default     = "East US"
+}
+
+variable "location_short" {
+  description = "Nome curto da localizacao para usar em nomes de recursos"
+  type        = string
+  default     = "eus"
+}
+
+variable "environment" {
+  description = "Ambiente de deployment (dev, staging, prod)"
+  type        = string
+  default     = "dev"
+  
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "Environment deve ser dev, staging ou prod."
+  }
+}
+
+variable "common_tags" {
+  description = "Tags comuns para todos os recursos"
+  type        = map(string)
+  default = {
+    Project     = "{{ project_name }}"
+    Environment = "dev"
+    ManagedBy   = "Terraform"
+  }
+}
+
+variable "resource_prefix" {
+  description = "Prefixo para nomes de recursos"
+  type        = string
+  default     = "{{ project_name }}"
+}

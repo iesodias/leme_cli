@@ -1,0 +1,26 @@
+variable "resource_name" {
+  description = "Nome base para o storage account e recursos associados."
+  type        = string
+  default     = "{{ resource_name }}"
+}
+
+variable "location" {
+  description = "Região do Azure onde os recursos serão criados."
+  type        = string
+  default     = "{{ location }}"
+}
+
+variable "location_short" {
+  description = "Nome curto da localização para usar em nomes de recursos."
+  type        = string
+  default     = "{{ location_short }}"
+}
+
+variable "tags" {
+  description = "Tags a serem aplicadas aos recursos."
+  type        = map(string)
+  default = {
+    "criado-por" = "leme-cli"
+    "recurso"    = "storage-account"
+  }
+}
