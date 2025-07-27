@@ -157,6 +157,8 @@ class AzureCliInstaller(BaseInstaller):
             print(":key: [blue]Adicionando chave GPG da Microsoft...[/blue]")
             with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
                 f.write("""#!/bin/bash
+# Criar diretório de keyrings se não existir
+sudo mkdir -p /etc/apt/keyrings
 curl -sLS https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/microsoft.gpg > /dev/null
 sudo chmod go+r /etc/apt/keyrings/microsoft.gpg
 """)

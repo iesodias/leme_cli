@@ -1,5 +1,6 @@
 """Comandos para configuração do ambiente DevOps."""
 
+import subprocess
 import typer
 from rich import print
 from typing import Optional, List
@@ -258,17 +259,149 @@ def _install_aws_cli(system_info) -> bool:
 
 def _install_kubectl(system_info) -> bool:
     """Instala kubectl baseado no sistema operacional."""
-    print(":information: [blue]Instalação do kubectl será implementada na próxima etapa[/blue]")
-    return False
+    try:
+        from ..system.system_detector import OperatingSystem
+        
+        print(":gear: [blue]Instalando kubectl...[/blue]")
+        
+        if system_info.os_type in [
+            OperatingSystem.UBUNTU, OperatingSystem.WSL_UBUNTU,
+            OperatingSystem.DEBIAN, OperatingSystem.WSL_DEBIAN
+        ]:
+            # Ubuntu/Debian - via repositório oficial do Kubernetes
+            subprocess.run(["sudo", "apt-get", "update"], check=True, capture_output=True)
+            subprocess.run([
+                "sudo", "apt-get", "install", "-y", "ca-certificates", "curl", "apt-transport-https"
+            ], check=True, capture_output=True)
+            
+            # Adicionar chave GPG do Kubernetes
+            subprocess.run([
+                "sudo", "mkdir", "-p", "/etc/apt/keyrings"
+            ], capture_output=True)
+            subprocess.run([
+                "bash", "-c", 
+                "curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+            ], check=True, capture_output=True)
+            
+            # Adicionar repositório
+            subprocess.run([
+                "bash", "-c",
+                "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
+            ], check=True, capture_output=True)
+            
+            subprocess.run(["sudo", "apt-get", "update"], check=True, capture_output=True)
+            subprocess.run(["sudo", "apt-get", "install", "-y", "kubectl"], check=True, capture_output=True)
+            
+        elif system_info.os_type == OperatingSystem.MACOS:
+            # macOS - via Homebrew
+            subprocess.run(["brew", "install", "kubectl"], check=True, capture_output=True)
+            
+        elif system_info.os_type in [OperatingSystem.CENTOS, OperatingSystem.RHEL, OperatingSystem.FEDORA]:
+            # CentOS/RHEL/Fedora - via repositório oficial
+            repo_content = """[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/repodata/repomd.xml.key"""
+            
+            subprocess.run([
+                "bash", "-c", f"echo '{repo_content}' | sudo tee /etc/yum.repos.d/kubernetes.repo"
+            ], check=True)
+            
+            pkg_manager = "dnf" if system_info.os_type == OperatingSystem.FEDORA else "yum"
+            subprocess.run(["sudo", pkg_manager, "install", "-y", "kubectl"], check=True, capture_output=True)
+        
+        else:
+            print(":warning: [yellow]Sistema não suportado para kubectl[/yellow]")
+            return False
+            
+        print(":white_check_mark: [green]kubectl instalado com sucesso![/green]")
+        return True
+        
+    except subprocess.CalledProcessError as e:
+        print(f":x: [red]Erro ao instalar kubectl: {e}[/red]")
+        return False
+    except Exception as e:
+        print(f":x: [red]Erro inesperado ao instalar kubectl: {str(e)}[/red]")
+        return False
 
 
 def _install_ansible(system_info) -> bool:
     """Instala Ansible baseado no sistema operacional."""
-    print(":information: [blue]Instalação do Ansible será implementada na próxima etapa[/blue]")
-    return False
+    try:
+        from ..system.system_detector import OperatingSystem
+        
+        print(":gear: [blue]Instalando Ansible...[/blue]")
+        
+        if system_info.os_type in [
+            OperatingSystem.UBUNTU, OperatingSystem.WSL_UBUNTU,
+            OperatingSystem.DEBIAN, OperatingSystem.WSL_DEBIAN
+        ]:
+            # Ubuntu/Debian - via pip (método mais confiável)
+            subprocess.run(["sudo", "apt-get", "update"], check=True, capture_output=True)
+            subprocess.run(["sudo", "apt-get", "install", "-y", "python3-pip"], check=True, capture_output=True)
+            subprocess.run(["pip3", "install", "ansible"], check=True, capture_output=True)
+            
+        elif system_info.os_type == OperatingSystem.MACOS:
+            # macOS - via Homebrew
+            subprocess.run(["brew", "install", "ansible"], check=True, capture_output=True)
+            
+        elif system_info.os_type in [OperatingSystem.CENTOS, OperatingSystem.RHEL, OperatingSystem.FEDORA]:
+            # CentOS/RHEL/Fedora - via pip
+            pkg_manager = "dnf" if system_info.os_type == OperatingSystem.FEDORA else "yum"
+            subprocess.run(["sudo", pkg_manager, "install", "-y", "python3-pip"], check=True, capture_output=True)
+            subprocess.run(["pip3", "install", "ansible"], check=True, capture_output=True)
+        
+        else:
+            print(":warning: [yellow]Sistema não suportado para Ansible[/yellow]")
+            return False
+            
+        print(":white_check_mark: [green]Ansible instalado com sucesso![/green]")
+        return True
+        
+    except subprocess.CalledProcessError as e:
+        print(f":x: [red]Erro ao instalar Ansible: {e}[/red]")
+        return False
+    except Exception as e:
+        print(f":x: [red]Erro inesperado ao instalar Ansible: {str(e)}[/red]")
+        return False
 
 
 def _install_watch(system_info) -> bool:
     """Instala watch baseado no sistema operacional."""
-    print(":information: [blue]Instalação do watch será implementada na próxima etapa[/blue]")
-    return False
+    try:
+        from ..system.system_detector import OperatingSystem
+        
+        print(":gear: [blue]Instalando watch...[/blue]")
+        
+        if system_info.os_type in [
+            OperatingSystem.UBUNTU, OperatingSystem.WSL_UBUNTU,
+            OperatingSystem.DEBIAN, OperatingSystem.WSL_DEBIAN
+        ]:
+            # Ubuntu/Debian - via apt
+            subprocess.run(["sudo", "apt-get", "update"], check=True, capture_output=True)
+            subprocess.run(["sudo", "apt-get", "install", "-y", "procps"], check=True, capture_output=True)
+            
+        elif system_info.os_type == OperatingSystem.MACOS:
+            # macOS - via Homebrew
+            subprocess.run(["brew", "install", "watch"], check=True, capture_output=True)
+            
+        elif system_info.os_type in [OperatingSystem.CENTOS, OperatingSystem.RHEL, OperatingSystem.FEDORA]:
+            # CentOS/RHEL/Fedora - via yum/dnf
+            pkg_manager = "dnf" if system_info.os_type == OperatingSystem.FEDORA else "yum"
+            subprocess.run(["sudo", pkg_manager, "install", "-y", "procps-ng"], check=True, capture_output=True)
+        
+        else:
+            print(":warning: [yellow]Sistema não suportado para watch[/yellow]")
+            return False
+            
+        print(":white_check_mark: [green]watch instalado com sucesso![/green]")
+        return True
+        
+    except subprocess.CalledProcessError as e:
+        print(f":x: [red]Erro ao instalar watch: {e}[/red]")
+        return False
+    except Exception as e:
+        print(f":x: [red]Erro inesperado ao instalar watch: {str(e)}[/red]")
+        return False
