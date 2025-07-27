@@ -58,28 +58,33 @@ app.add_typer(install_app, name="install")
 @new_app.command("project")
 def new_project(
     name: str = typer.Option(..., "--name", "-n", help="O nome do projeto."),
-    provider: str = typer.Option(..., "--provider", "-p", help="O provedor de nuvem: 'aws' ou 'azure'.")
+    provider: str = typer.Option(..., "--provider", "-p", help="O provedor de nuvem: 'aws' ou 'azure'."),
+    path: str = typer.Option(".", "--path", help="Diretório onde criar o projeto (padrão: diretório atual).")
 ):
     """
     Cria a estrutura de um novo projeto Terraform para um provedor específico.
     """
-    create_project(name, provider)
+    create_project(name, provider, path)
 
 
 @new_app.command("module")
-def new_module(name: str = typer.Option(..., "--name", "-n", help="O nome do módulo.")):
+def new_module(
+    name: str = typer.Option(..., "--name", "-n", help="O nome do módulo."),
+    path: str = typer.Option(".", "--path", help="Diretório onde criar o módulo (padrão: diretório atual).")
+):
     """Cria a estrutura de um novo módulo Terraform reutilizável."""
-    create_module(name)
+    create_module(name, path)
 
 
 @new_app.command("resource")
 def new_resource(
     resource_type: str = typer.Option(..., "--type", "-t", help="Tipo do recurso a ser criado (ex: storage-account, virtual_machine)."),
     provider: str = typer.Option(..., "--provider", "-p", help="O provedor de nuvem: 'aws' ou 'azure'."),
-    name: str = typer.Option(..., "--name", "-n", help="O nome para o módulo do recurso (será o nome da pasta).")
+    name: str = typer.Option(..., "--name", "-n", help="O nome para o módulo do recurso (será o nome da pasta)."),
+    path: str = typer.Option(".", "--path", help="Diretório onde criar o recurso (padrão: diretório atual).")
 ):
     """Cria um módulo Terraform para um recurso específico."""
-    create_resource(resource_type, provider, name)
+    create_resource(resource_type, provider, name, path)
 
 
 @app.command("delete")

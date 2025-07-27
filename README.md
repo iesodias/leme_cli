@@ -90,6 +90,9 @@ python3 main.py new project --name meu-projeto --provider azure
 # Criar um projeto AWS
 python3 main.py new project --name meu-projeto --provider aws
 
+# Criar projeto em diretório específico
+python3 main.py new project --name meu-projeto --provider azure --path /home/usuario/projetos
+
 # Executar comandos Terraform
 python3 main.py run init meu-projeto
 python3 main.py run plan meu-projeto
@@ -240,6 +243,9 @@ python3 main.py new project --name meu-primeiro-projeto --provider azure
 
 # AWS
 python3 main.py new project --name meu-primeiro-projeto --provider aws
+
+# Em diretório específico
+python3 main.py new project --name meu-primeiro-projeto --provider azure --path ~/projetos
 ```
 
 ### 3. Trabalhar com Terraform

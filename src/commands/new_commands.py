@@ -13,22 +13,35 @@ from ..config.validation import (
 from ..templates.template_manager import TemplateManager
 
 
-def create_project(name: str, provider: str) -> None:
+def create_project(name: str, provider: str, path: str = ".") -> None:
     """
     Cria a estrutura de um novo projeto Terraform para um provedor específico.
     
     Args:
         name: Nome do projeto
         provider: Provedor de nuvem (aws ou azure)
+        path: Diretório onde criar o projeto (padrão: diretório atual)
     """
     try:
         # Validações
         validate_project_name(name)
         provider_enum = validate_provider(provider)
-        project_path = Path(name)
+        
+        # Construir caminho do projeto
+        base_path = Path(path).resolve()
+        project_path = base_path / name
+        
+        # Validar se o diretório base existe
+        if not base_path.exists():
+            raise ValidationError(f"Diretório base não existe: {base_path}")
+        
+        if not base_path.is_dir():
+            raise ValidationError(f"Caminho especificado não é um diretório: {base_path}")
+        
         validate_directory_not_exists(project_path)
         
         print(f":construction: Criando projeto [bold green]{name}[/bold green] para o provedor [bold blue]{provider_enum.value}[/bold blue]...")
+        print(f"Local: [dim]{project_path}[/dim]")
         
         # Preparar dados do template
         template_data = {"project_name": name}
@@ -49,7 +62,7 @@ def create_project(name: str, provider: str) -> None:
         template_manager.render_project_files(provider_enum, template_data, project_path)
         
         print(f"\n:rocket: Projeto [bold green]{name}[/bold green] criado com sucesso!")
-        print(f"Acesse o diretório com: [bold cyan]cd {name}[/bold cyan]")
+        print(f"Acesse o diretório com: [bold cyan]cd {project_path}[/bold cyan]")
         
     except ValidationError as e:
         print(f":x: [bold red]Erro:[/bold red] {e}")
@@ -59,24 +72,38 @@ def create_project(name: str, provider: str) -> None:
         raise typer.Exit(code=1)
 
 
-def create_module(name: str) -> None:
+def create_module(name: str, path: str = ".") -> None:
     """
     Cria a estrutura de um novo módulo Terraform reutilizável.
     
     Args:
         name: Nome do módulo
+        path: Diretório onde criar o módulo (padrão: diretório atual)
     """
     try:
         validate_project_name(name)
-        module_path = Path(name)
+        
+        # Construir caminho do módulo
+        base_path = Path(path).resolve()
+        module_path = base_path / name
+        
+        # Validar se o diretório base existe
+        if not base_path.exists():
+            raise ValidationError(f"Diretório base não existe: {base_path}")
+        
+        if not base_path.is_dir():
+            raise ValidationError(f"Caminho especificado não é um diretório: {base_path}")
+        
         validate_directory_not_exists(module_path)
         
         print(f":package: Criando módulo [bold blue]{name}[/bold blue]...")
+        print(f"Local: [dim]{module_path}[/dim]")
         
         template_manager = TemplateManager()
         template_manager.render_module_files(module_path)
         
         print(f"\n:sparkles: Módulo [bold blue]{name}[/bold blue] criado com sucesso!")
+        print(f"Acesse o diretório com: [bold cyan]cd {module_path}[/bold cyan]")
         
     except ValidationError as e:
         print(f":x: [bold red]Erro:[/bold red] {e}")
@@ -86,7 +113,7 @@ def create_module(name: str) -> None:
         raise typer.Exit(code=1)
 
 
-def create_resource(resource_type: str, provider: str, name: str) -> None:
+def create_resource(resource_type: str, provider: str, name: str, path: str = ".") -> None:
     """
     Cria um módulo Terraform para um recurso específico.
     
@@ -94,16 +121,29 @@ def create_resource(resource_type: str, provider: str, name: str) -> None:
         resource_type: Tipo do recurso (ex: storage-account, virtual_machine)
         provider: Provedor de nuvem (aws ou azure) 
         name: Nome para o módulo do recurso
+        path: Diretório onde criar o recurso (padrão: diretório atual)
     """
     try:
         # Validações
         validate_project_name(name)
         provider_enum = validate_provider(provider)
         resource_enum = validate_resource_type(resource_type, provider_enum)
-        resource_path = Path(name)
+        
+        # Construir caminho do recurso
+        base_path = Path(path).resolve()
+        resource_path = base_path / name
+        
+        # Validar se o diretório base existe
+        if not base_path.exists():
+            raise ValidationError(f"Diretório base não existe: {base_path}")
+        
+        if not base_path.is_dir():
+            raise ValidationError(f"Caminho especificado não é um diretório: {base_path}")
+        
         validate_directory_not_exists(resource_path)
         
-        print(f":sparkles: Criando recurso [bold yellow]{resource_enum.value}[/bold yellow] para [bold blue]{provider_enum.value}[/bold blue] em [bold green]./{name}/[/bold green]...")
+        print(f":sparkles: Criando recurso [bold yellow]{resource_enum.value}[/bold yellow] para [bold blue]{provider_enum.value}[/bold blue]...")
+        print(f"Local: [dim]{resource_path}[/dim]")
         
         # Preparar dados do template
         template_data = {"resource_name": name}
@@ -122,6 +162,7 @@ def create_resource(resource_type: str, provider: str, name: str) -> None:
         template_manager.render_resource_files(provider_enum, resource_enum.value, template_data, resource_path)
         
         print(f"\n:rocket: Módulo de recurso [bold green]{name}[/bold green] criado com sucesso!")
+        print(f"Acesse o diretório com: [bold cyan]cd {resource_path}[/bold cyan]")
         
     except ValidationError as e:
         print(f":x: [bold red]Erro:[/bold red] {e}")
