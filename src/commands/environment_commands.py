@@ -344,7 +344,24 @@ def _install_ansible(system_info) -> bool:
             _cleanup_corrupted_repositories()
             subprocess.run(["sudo", "apt-get", "update"], check=True, capture_output=True)
             subprocess.run(["sudo", "apt-get", "install", "-y", "python3-pip"], check=True, capture_output=True)
-            subprocess.run(["pip3", "install", "ansible"], check=True, capture_output=True)
+            
+            # Instalar Ansible globalmente para que fique disponível no PATH
+            subprocess.run(["sudo", "pip3", "install", "ansible"], check=True, capture_output=True)
+            
+            # Verificar se o binário está acessível e criar link se necessário
+            try:
+                subprocess.run(["ansible", "--version"], check=True, capture_output=True)
+            except (FileNotFoundError, subprocess.CalledProcessError):
+                # Se não encontrar, tentar criar link simbólico
+                ansible_paths = [
+                    "/usr/local/bin/ansible",
+                    "/home/user/.local/bin/ansible",
+                    "/usr/bin/ansible"
+                ]
+                for path in ansible_paths:
+                    if subprocess.run(["test", "-f", path], capture_output=True).returncode == 0:
+                        subprocess.run(["sudo", "ln", "-sf", path, "/usr/bin/ansible"], capture_output=True)
+                        break
             
         elif system_info.os_type == OperatingSystem.MACOS:
             # macOS - via Homebrew
@@ -354,7 +371,24 @@ def _install_ansible(system_info) -> bool:
             # CentOS/RHEL/Fedora - via pip
             pkg_manager = "dnf" if system_info.os_type == OperatingSystem.FEDORA else "yum"
             subprocess.run(["sudo", pkg_manager, "install", "-y", "python3-pip"], check=True, capture_output=True)
-            subprocess.run(["pip3", "install", "ansible"], check=True, capture_output=True)
+            
+            # Instalar Ansible globalmente
+            subprocess.run(["sudo", "pip3", "install", "ansible"], check=True, capture_output=True)
+            
+            # Verificar se o binário está acessível
+            try:
+                subprocess.run(["ansible", "--version"], check=True, capture_output=True)
+            except (FileNotFoundError, subprocess.CalledProcessError):
+                # Se não encontrar, tentar criar link simbólico
+                ansible_paths = [
+                    "/usr/local/bin/ansible",
+                    "/home/user/.local/bin/ansible",
+                    "/usr/bin/ansible"
+                ]
+                for path in ansible_paths:
+                    if subprocess.run(["test", "-f", path], capture_output=True).returncode == 0:
+                        subprocess.run(["sudo", "ln", "-sf", path, "/usr/bin/ansible"], capture_output=True)
+                        break
         
         else:
             print(":warning: [yellow]Sistema não suportado para Ansible[/yellow]")
