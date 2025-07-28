@@ -166,9 +166,22 @@ class TerraformInstaller(BaseInstaller):
             
             # Adicionar repositório
             print(":package: [blue]Adicionando repositório HashiCorp...[/blue]")
+            
+            # Verificar se lsb_release funciona corretamente
+            try:
+                codename_result = subprocess.run(["lsb_release", "-cs"], capture_output=True, text=True, check=True)
+                codename = codename_result.stdout.strip()
+                if not codename:
+                    raise subprocess.CalledProcessError(1, "lsb_release -cs")
+            except subprocess.CalledProcessError:
+                # Fallback para distribuições sem lsb_release ou com problemas
+                print(":warning: [yellow]lsb_release falhou, usando codename padrão[/yellow]")
+                codename = "bookworm"  # Debian 12 padrão
+            
+            repo_line = f"deb [signed-by=/etc/apt/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com {codename} main"
             subprocess.run([
                 "bash", "-c",
-                "echo \"deb [signed-by=/etc/apt/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main\" | sudo tee /etc/apt/sources.list.d/hashicorp.list"
+                f"echo '{repo_line}' | sudo tee /etc/apt/sources.list.d/hashicorp.list"
             ], check=True)
             
             # Atualizar e instalar
@@ -183,6 +196,8 @@ class TerraformInstaller(BaseInstaller):
         
         except subprocess.CalledProcessError as e:
             print(f":warning: [yellow]Falha no repositório HashiCorp: {e}[/yellow]")
+            # Limpar repositório corrompido para não afetar outras instalações
+            self._cleanup_failed_repository()
             return False
     
     def _install_redhat(self) -> bool:
@@ -432,3 +447,28 @@ class TerraformInstaller(BaseInstaller):
         except Exception as e:
             print(f":x: [red]Erro ao remover Terraform: {str(e)}[/red]")
             return False
+    
+    def _cleanup_failed_repository(self) -> None:
+        """Remove repositório HashiCorp corrompido para não afetar outras instalações."""
+        try:
+            print(":broom: [blue]Limpando repositório corrompido...[/blue]")
+            
+            # Remover arquivo de repositório se existir
+            subprocess.run([
+                "sudo", "rm", "-f", "/etc/apt/sources.list.d/hashicorp.list"
+            ], capture_output=True)
+            
+            # Remover chave GPG se existir
+            subprocess.run([
+                "sudo", "rm", "-f", "/etc/apt/keyrings/hashicorp.gpg"
+            ], capture_output=True)
+            
+            # Tentar atualizar repositórios para limpar cache
+            subprocess.run([
+                "sudo", "apt-get", "update"
+            ], capture_output=True)
+            
+            print(":white_check_mark: [green]Repositório limpo com sucesso[/green]")
+            
+        except Exception as e:
+            print(f":warning: [yellow]Aviso: Não foi possível limpar repositório: {str(e)}[/yellow]")
