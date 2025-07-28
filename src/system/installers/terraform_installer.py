@@ -168,7 +168,7 @@ class TerraformInstaller(BaseInstaller):
             print(":package: [blue]Adicionando repositório HashiCorp...[/blue]")
             subprocess.run([
                 "bash", "-c",
-                "echo 'deb [signed-by=/etc/apt/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main' | sudo tee /etc/apt/sources.list.d/hashicorp.list"
+                "echo \"deb [signed-by=/etc/apt/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main\" | sudo tee /etc/apt/sources.list.d/hashicorp.list"
             ], check=True)
             
             # Atualizar e instalar
