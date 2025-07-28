@@ -4,7 +4,7 @@ import typer
 from rich import print
 from typing import Optional
 
-from src.commands.install_commands import install_docker, uninstall_docker, check_docker_status, system_info, install_azure_cli, install_aws_cli
+from src.commands.install_commands import install_docker, uninstall_docker, check_docker_status, system_info, install_terraform, install_azure_cli, install_aws_cli
 from src.commands.environment_commands import setup_environment, environment_status
 
 # --- Configuração da Aplicação ---
@@ -67,6 +67,15 @@ def install_azure_cli_command(
 ):
     """Instala o Azure CLI automaticamente baseado no sistema operacional."""
     install_azure_cli(force, manual)
+
+
+@install_app.command("terraform")
+def install_terraform_command(
+    force: bool = typer.Option(False, "--force", "-f", help="Forçar reinstalação mesmo se já estiver instalado"),
+    manual: bool = typer.Option(False, "--manual", help="Mostrar instruções para instalação manual")
+):
+    """Instala o Terraform automaticamente baseado no sistema operacional."""
+    install_terraform(force, manual)
 
 
 @install_app.command("aws-cli")

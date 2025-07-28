@@ -5,6 +5,7 @@ from rich import print
 from typing import Optional
 
 from ..system.docker_installer import DockerInstaller
+from ..system.installers.terraform_installer import TerraformInstaller
 from ..system.installers.azure_cli_installer import AzureCliInstaller
 from ..system.installers.aws_cli_installer import AwsCliInstaller
 from ..system.system_detector import SystemDetector
@@ -192,6 +193,55 @@ def install_azure_cli(force: bool = False, manual: bool = False) -> None:
             print(":x: [bold red]Falha na instalação automática.[/bold red]")
             print()
             azure_installer.print_manual_instructions()
+            raise typer.Exit(code=1)
+            
+    except Exception as e:
+        print(f":x: [bold red]Erro inesperado:[/bold red] {e}")
+        raise typer.Exit(code=1)
+
+
+def install_terraform(force: bool = False, manual: bool = False) -> None:
+    """
+    Instala o Terraform automaticamente baseado no sistema operacional.
+    
+    Args:
+        force: Forçar reinstalação mesmo se já estiver instalado
+        manual: Mostrar instruções para instalação manual
+    """
+    try:
+        system_info = SystemDetector.detect()
+        terraform_installer = TerraformInstaller(system_info)
+        
+        print(":gear: [bold blue]Instalação do Terraform[/bold blue]")
+        print(f"Sistema detectado: [green]{system_info}[/green]")
+        print()
+        
+        # Mostrar instruções manuais se solicitado
+        if manual:
+            terraform_installer.print_manual_instructions()
+            return
+        
+        # Verificar se já está instalado
+        if not force and terraform_installer.is_installed():
+            version = terraform_installer.get_installed_version()
+            print(f":white_check_mark: Terraform já está instalado (versão {version})")
+            
+            if not typer.confirm("Deseja reinstalar?"):
+                return
+        
+        # Instalar Terraform
+        print()
+        success = terraform_installer.install()
+        
+        if success:
+            print()
+            print(":white_check_mark: [bold green]Terraform instalado com sucesso![/bold green]")
+            print("Teste com: [cyan]terraform --version[/cyan]")
+        else:
+            print()
+            print(":x: [bold red]Falha na instalação automática.[/bold red]")
+            print()
+            terraform_installer.print_manual_instructions()
             raise typer.Exit(code=1)
             
     except Exception as e:

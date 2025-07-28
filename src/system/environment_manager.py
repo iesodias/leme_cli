@@ -92,6 +92,10 @@ class EnvironmentManager:
             if "git version" in first_line:
                 return first_line.replace("git version", "").strip()
         
+        elif tool == Tool.TERRAFORM:
+            # Terraform v1.5.7
+            if "Terraform" in first_line:
+                return first_line.replace("Terraform", "").strip()
         
         elif tool == Tool.AZURE_CLI:
             # Para az, a versão pode estar em JSON ou texto

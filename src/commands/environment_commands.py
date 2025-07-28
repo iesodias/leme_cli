@@ -8,6 +8,7 @@ from typing import Optional, List
 from ..system.environment_manager import EnvironmentManager
 from ..system.docker_installer import DockerInstaller
 from ..system.installers.git_installer import GitInstaller
+from ..system.installers.terraform_installer import TerraformInstaller
 from ..system.installers.aws_cli_installer import AwsCliInstaller
 from ..system.installers.azure_cli_installer import AzureCliInstaller
 from ..config.constants import Tool, DEVOPS_TOOLS_CONFIG
@@ -96,16 +97,12 @@ def setup_environment(
             print(f"\n• [blue]{config['name']}[/blue] {required_text}")
             print(f"  {config['description']}")
             
-            # Ferramentas obrigatórias são instaladas automaticamente
-            if config["required"]:
-                print(f"  :white_check_mark: [green]Será instalada automaticamente (obrigatória)[/green]")
+            # Agora todas as ferramentas são opcionais - perguntar para todas
+            confirm = typer.confirm(f"  Deseja instalar {config['name']}?")
+            if confirm:
                 selected_tools.append(tool)
             else:
-                confirm = typer.confirm(f"  Deseja instalar {config['name']}?")
-                if confirm:
-                    selected_tools.append(tool)
-                else:
-                    print(f"  :information: [yellow]Pulando {config['name']}[/yellow]")
+                print(f"  :information: [yellow]Pulando {config['name']}[/yellow]")
         
         tools_to_install = selected_tools
         
@@ -192,6 +189,8 @@ def _install_tool(tool: Tool, system_info, force: bool = False) -> bool:
         elif tool == Tool.GIT:
             return _install_git(system_info)
         
+        elif tool == Tool.TERRAFORM:
+            return _install_terraform(system_info)
         
         elif tool == Tool.AZURE_CLI:
             return _install_azure_cli(system_info)
@@ -227,6 +226,14 @@ def _install_git(system_info) -> bool:
         return False
 
 
+def _install_terraform(system_info) -> bool:
+    """Instala Terraform baseado no sistema operacional."""
+    try:
+        terraform_installer = TerraformInstaller(system_info)
+        return terraform_installer.install()
+    except Exception as e:
+        print(f":x: [red]Erro durante instalação do Terraform: {str(e)}[/red]")
+        return False
 
 
 def _install_azure_cli(system_info) -> bool:
