@@ -88,8 +88,11 @@ python3 main.py install azure-cli
 ### ⚙️ Configurações Avançadas
 
 ```bash
-# 🎯 MODO INTERATIVO - Escolher cada ferramenta individualmente
-python3 main.py setup-environment --interactive
+# 🎯 MODO PADRÃO - Pergunta para cada ferramenta (recomendado)
+python3 main.py setup-environment
+
+# 🚀 MODO AUTOMÁTICO - Instala tudo sem perguntar
+python3 main.py setup-environment --force
 
 # Instalar apenas ferramentas obrigatórias (Docker + Git)
 python3 main.py setup-environment --required-only
@@ -97,24 +100,22 @@ python3 main.py setup-environment --required-only
 # Instalar ferramentas específicas
 python3 main.py setup-environment --tools docker,git,aws-cli
 
-# Forçar reinstalação (se algo deu errado)
-python3 main.py setup-environment --force
-
 # Pular Docker (se já tiver instalado)
 python3 main.py setup-environment --skip-docker
 ```
 
-### 🎯 **Modo Interativo** - Recomendado para Iniciantes
+### 🎯 **Como Funciona o Modo Padrão** (Novo Comportamento)
 
 ```bash
-# Permite escolher cada ferramenta individualmente
-python3 main.py setup-environment --interactive
+# Agora POR PADRÃO a CLI pergunta para cada ferramenta
+python3 main.py setup-environment
 ```
 
-**Como funciona:**
+**Comportamento:**
 - ✅ **Ferramentas obrigatórias** (Docker, Git): Instaladas automaticamente
-- ❓ **Ferramentas opcionais** (AWS CLI, Azure CLI, etc.): Pergunta se deseja instalar cada uma
-- 📋 **Controle total**: Você decide exatamente o que instalar
+- ❓ **Ferramentas opcionais** (AWS CLI, Azure CLI, kubectl, Ansible, watch): Pergunta se deseja instalar cada uma
+- 📋 **Controle total**: Você escolhe exatamente o que instalar
+- 🚀 **Para instalar tudo sem perguntar**: Use `--force`
 
 ### 🔍 Verificar Status
 
@@ -356,11 +357,11 @@ git clone https://github.com/iesodias/leme_cli.git
 cd leme_cli
 ./quick-install.sh
 
-# 🎯 MODO INTERATIVO (recomendado para iniciantes)
-python3 main.py setup-environment --interactive
-
-# 🚀 OU MODO AUTOMÁTICO (instala tudo)
+# 🎯 MODO PADRÃO (pergunta para cada ferramenta - recomendado)
 python3 main.py setup-environment
+
+# 🚀 OU MODO AUTOMÁTICO (instala tudo sem perguntar)
+python3 main.py setup-environment --force
 
 # ✅ VERIFICAR SE FUNCIONOU
 python3 main.py environment-status
@@ -370,8 +371,7 @@ docker run hello-world
 python3 main.py install docker        # Docker isolado
 python3 main.py install aws-cli       # AWS CLI
 python3 main.py install azure-cli     # Azure CLI
-python3 main.py setup-environment --force    # Forçar reinstalação
-python3 main.py setup-environment --interactive    # Escolher ferramentas
+python3 main.py setup-environment --force    # Instalar tudo sem perguntar
 ```
 
 **🎯 A CLI detecta seu sistema automaticamente e instala tudo corretamente!**

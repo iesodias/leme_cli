@@ -18,7 +18,7 @@ def setup_environment(
     required_only: bool = typer.Option(False, "--required-only", help="Instalar apenas ferramentas obrigatórias"),
     skip_docker: bool = typer.Option(False, "--skip-docker", help="Pular instalação do Docker"),
     force: bool = typer.Option(False, "--force", "-f", help="Forçar reinstalação de ferramentas"),
-    interactive: bool = typer.Option(False, "--interactive", "-i", help="Perguntar para cada ferramenta se deseja instalar"),
+    interactive: bool = typer.Option(False, "--interactive", "-i", help="Modo interativo (LEGACY - agora é padrão)"),
     tools: Optional[List[str]] = typer.Option(None, "--tools", "-t", help="Instalar apenas ferramentas específicas (ex: git,docker)")
 ) -> None:
     """
@@ -84,9 +84,9 @@ def setup_environment(
         print(":white_check_mark: [green]Todas as ferramentas selecionadas já estão instaladas![/green]")
         return
     
-    # Modo interativo - perguntar para cada ferramenta
-    if interactive and not force:
-        print(f"\n:question: [bold cyan]Modo Interativo - Escolha as ferramentas:[/bold cyan]")
+    # Sempre perguntar para ferramentas opcionais (exceto se --force)
+    if not force:
+        print(f"\n:question: [bold cyan]Escolha as ferramentas para instalar:[/bold cyan]")
         selected_tools = []
         
         for tool in tools_to_install:
@@ -119,20 +119,12 @@ def setup_environment(
             print(f"  • [blue]{config['name']}[/blue]")
     
     else:
-        # Modo tradicional - mostrar plano completo
-        print(f"\n:wrench: [bold cyan]Plano de Instalação:[/bold cyan]")
+        # Modo --force - instalar tudo sem perguntar
+        print(f"\n:wrench: [bold cyan]Modo Force - Instalando todas as ferramentas:[/bold cyan]")
         for tool in tools_to_install:
             config = DEVOPS_TOOLS_CONFIG[tool]
             required_text = "[red](obrigatória)[/red]" if config["required"] else "[yellow](opcional)[/yellow]"
             print(f"  • [blue]{config['name']}[/blue] {required_text} - {config['description']}")
-        
-        # Confirmar instalação
-        if not force:
-            print()
-            confirm = typer.confirm("Deseja continuar com a instalação?")
-            if not confirm:
-                print(":x: [yellow]Instalação cancelada pelo usuário[/yellow]")
-                raise typer.Exit(0)
     
     print("\n:gear: [bold green]Iniciando instalação das ferramentas...[/bold green]")
     
