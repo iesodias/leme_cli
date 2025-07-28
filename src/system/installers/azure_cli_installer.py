@@ -145,6 +145,10 @@ class AzureCliInstaller(BaseInstaller):
         try:
             # Instalar dependências
             print(":package: [blue]Instalando dependências...[/blue]")
+            
+            # Limpar repositórios corrompidos antes de tentar atualizar
+            self._cleanup_corrupted_repositories()
+            
             subprocess.run([
                 "sudo", "apt-get", "update"
             ], check=True, capture_output=True)
@@ -402,3 +406,47 @@ gpgkey=https://packages.microsoft.com/keys/microsoft.asc"""
         except Exception as e:
             print(f":x: [red]Erro ao remover Azure CLI: {str(e)}[/red]")
             return False
+    
+    def _cleanup_corrupted_repositories(self) -> None:
+        """Remove repositórios corrompidos que podem afetar apt-get update."""
+        try:
+            print(":broom: [blue]Limpando repositórios corrompidos...[/blue]")
+            
+            # Lista de arquivos de repositório que podem estar corrompidos
+            corrupted_repos = [
+                "/etc/apt/sources.list.d/hashicorp.list",
+                "/etc/apt/sources.list.d/microsoft-prod.list",
+                "/etc/apt/sources.list.d/azure-cli.list"
+            ]
+            
+            # Lista de chaves GPG que podem estar corrompidas
+            corrupted_keys = [
+                "/etc/apt/keyrings/hashicorp.gpg",
+                "/etc/apt/keyrings/microsoft.gpg",
+                "/etc/apt/trusted.gpg.d/microsoft.gpg"
+            ]
+            
+            # Remover arquivos de repositório corrompidos
+            for repo_file in corrupted_repos:
+                subprocess.run([
+                    "sudo", "rm", "-f", repo_file
+                ], capture_output=True)
+            
+            # Remover chaves GPG corrompidas
+            for key_file in corrupted_keys:
+                subprocess.run([
+                    "sudo", "rm", "-f", key_file
+                ], capture_output=True)
+            
+            # Tentar atualizar repositórios para limpar cache
+            result = subprocess.run([
+                "sudo", "apt-get", "update"
+            ], capture_output=True)
+            
+            if result.returncode == 0:
+                print(":white_check_mark: [green]Repositórios limpos com sucesso[/green]")
+            else:
+                print(":warning: [yellow]Aviso: Alguns repositórios ainda podem ter problemas[/yellow]")
+            
+        except Exception as e:
+            print(f":warning: [yellow]Aviso: Não foi possível limpar repositórios: {str(e)}[/yellow]")
